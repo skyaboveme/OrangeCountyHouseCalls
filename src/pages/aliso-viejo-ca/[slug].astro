@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import FAQList from '../../components/FAQList.astro';
+import Icon from '../../components/Icon.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
+import { services, tocFromHtml, withHeadingIds, splitForCta, type Service } from '../../lib/content';
+import { SITE } from '../../data/site';
+import { medicalWebPage, breadcrumb, faqPage, serviceSchema, definedTerms } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props as { service: Service };
+const { path, title, description, name, faqs, definitions, references, modified } = service;
+const html = withHeadingIds(service.html);
+const [htmlA, htmlB] = splitForCta(html, 2);
+const toc = tocFromHtml(service.html);
+const related = service.related.filter((r) => r.href.startsWith('/') && r.href !== path).slice(0, 8);
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services/' },
+  { name, path },
+];
+---
+<BaseLayout
+  title={title}
+  description={description}
+  modified={modified}
+  schema={[
+    medicalWebPage({ path, title, description, about: name, modified }),
+    serviceSchema({ name, path, description }),
+    breadcrumb(crumbs),
+    faqPage(faqs),
+    definedTerms(`${name} — Medical Terminology`, path, definitions),
+  ]}
+>
+  <PageHero title={service.h1} eyebrow="Orange County House Calls" crumbs={crumbs}>
+    <div class="hero-actions">
+      <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone}</a>
+      <button type="button" class="btn btn--light btn--lg" data-open-appt><Icon name="calendar" /> Book a Visit</button>
+    </div>
+    <ul class="hero-trust">
+      <li><Icon name="check" size={15} /> Same-day or next-day visits</li>
+      <li><Icon name="check" size={15} /> House calls & telemedicine</li>
+      <li><Icon name="check" size={15} /> Board-certified Internal Medicine</li>
+    </ul>
+  </PageHero>
+
+  <div class="container layout">
+    <article class="layout__main">
+      <div class="prose" set:html={htmlA} />
+      {htmlB && <InlineCTA topic={name} />}
+      {htmlB && <div class="prose" set:html={htmlB} />}
+
+      {faqs.length > 0 && (
+        <section class="block" aria-labelledby="faq-title">
+          <p class="eyebrow">Questions &amp; Answers</p>
+          <h2 id="faq-title">Frequently Asked Questions</h2>
+          <FAQList faqs={faqs} />
+        </section>
+      )}
+
+      {definitions.length > 0 && (
+        <section class="block" aria-labelledby="terms-title">
+          <p class="eyebrow">Glossary</p>
+          <h2 id="terms-title">Definition of Medical Terminology</h2>
+          <dl class="terms">
+            {definitions.map((d) => (
+              <div class="term"><dt><dfn>{d.term}</dfn></dt><dd>{d.def}</dd></div>
+            ))}
+          </dl>
+          <a href="/primary-care-physician-terminology/" class="more">View the full medical glossary <Icon name="arrow" size={16} /></a>
+        </section>
+      )}
+
+      <section class="callout" aria-labelledby="call-title">
+        <div>
+          <p class="callout__kicker">Open 7 days · {SITE.hours.label}</p>
+          <h2 id="call-title">Start Feeling Better – Visit Us Today</h2>
+          <p>By visiting us as soon as possible, our team can help get you the professional treatment you need. Instead of waiting around and allowing the symptoms to get worse, we can provide you with treatment options. Call us today at <a href={SITE.phoneHref}>{SITE.phone}</a>.</p>
+        </div>
+        <div class="callout__actions">
+          <a href={SITE.phoneHref} class="btn btn--gold"><Icon name="phone" /> Call Now</a>
+          <button type="button" class="btn btn--light" data-open-appt><Icon name="calendar" /> Book Online</button>
+          <a href={SITE.directionsUrl} target="_blank" rel="noopener" class="callout__dir"><Icon name="pin" size={16} /> Get Directions</a>
+        </div>
+      </section>
+
+      {references.length > 0 && (
+        <section class="refs" aria-labelledby="refs-title">
+          <h2 id="refs-title">Helpful Related Links</h2>
+          <ul>{references.map((r) => <li><a href={r.url} target="_blank" rel="noopener nofollow">{r.name}</a></li>)}</ul>
+        </section>
+      )}
+
+      <p class="reviewed"><Icon name="shield" size={16} /> Medically reviewed by Sina Khaneki, MD, MPH — Internal Medicine.</p>
+    </article>
+
+    <Sidebar related={related} toc={toc} />
+  </div>
+</BaseLayout>
+
+<style>
+  .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(2rem, 4vw, 4rem); padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(4rem, 8vw, 6rem); }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+  .layout__main { min-width: 0; }
+  .block { margin-top: 3.5rem; }
+  .terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; margin: 0 0 1.25rem; }
+  .term { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .term dt { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
+  .term dfn { font-style: normal; }
+  .term dd { margin: 0; color: var(--muted); font-size: .93rem; line-height: 1.6; }
+  .more { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; text-decoration: none; }
+  .callout { margin-top: 3.5rem; padding: 2rem; border-radius: var(--radius-lg); background: radial-gradient(500px 200px at 100% 0%, rgba(214,184,120,.25), transparent 60%), linear-gradient(150deg, var(--ink), var(--ink-3)); color: #c4cedb; display: grid; gap: 1.25rem; }
+  .callout h2 { color: #fff; font-size: 1.9rem; }
+  .callout a:not(.btn) { color: var(--gold-2); font-weight: 700; }
+  .callout p { margin: 0; }
+  .callout__actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+  .callout__kicker { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 800; color: var(--gold-2); margin: 0 0 .5rem !important; }
+  .callout .callout__dir { display: inline-flex; align-items: center; gap: .35rem; color: #dfe6ee; font-weight: 600; text-decoration: none; margin-left: .25rem; }
+  .hero-trust { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; list-style: none; padding: 0; margin: 1.1rem 0 0; font-size: .86rem; color: #c9d3de; }
+  .hero-trust li { display: inline-flex; align-items: center; gap: .35rem; }
+  .hero-trust :global(svg) { color: var(--gold-2); }
+  .refs { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  .refs h2 { font-size: 1.4rem; }
+  .refs ul { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 0; }
+  .refs a { display: inline-block; padding: .45rem .9rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: .85rem; text-decoration: none; color: var(--ink); }
+  .refs a:hover { border-color: var(--gold); color: var(--gold); }
+  .reviewed { display: flex; align-items: center; gap: .5rem; margin-top: 2rem; font-size: .85rem; color: var(--muted); }
+  .reviewed :global(svg) { color: var(--gold); }
+</style>

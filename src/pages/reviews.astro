@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import Icon from '../components/Icon.astro';
+import { pages } from '../lib/content';
+import { REVIEWS } from '../data/reviews';
+import { SITE } from '../data/site';
+import { breadcrumb } from '../lib/schema';
+
+const page = pages['/reviews/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Reviews', path: '/reviews/' }];
+const reviewsSchema = {
+  '@type': 'WebPage',
+  url: `${SITE.url}/reviews/`,
+  name: page.title,
+  about: { '@id': `${SITE.url}/#clinic` },
+  mainEntity: REVIEWS.map((r) => ({
+    '@type': 'Review',
+    author: { '@type': 'Person', name: r.name },
+    reviewBody: r.text,
+    itemReviewed: { '@id': `${SITE.url}/#clinic` },
+  })),
+};
+---
+<BaseLayout title={page.title} description={page.description} schema={[reviewsSchema, breadcrumb(crumbs)]}>
+  <PageHero title="Reviews" eyebrow="Patient Testimonials" crumbs={crumbs}
+    lede="On this page, you can read some of the reviews our patients have left in the past. We thrive on feedback from our patients, and encourage you to share your experience with us, at any stage in your treatment.">
+    <div style="margin-top:1.75rem">
+      <a href={SITE.reviewUrl} target="_blank" rel="noopener" class="btn btn--gold"><Icon name="google" /> Review us on Google</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container masonry">
+      {REVIEWS.map((r) => <div class="m-item reveal"><ReviewCard review={r} /></div>)}
+    </div>
+    <p class="center thanks">If you have the time to leave us a review, please click on the Review us on Google button. Thank you for taking the time to evaluate us!</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .masonry { columns: 3 320px; column-gap: 1.5rem; }
+  .m-item { break-inside: avoid; margin-bottom: 1.5rem; }
+  .thanks { color: var(--muted); max-width: 60ch; margin: 1rem auto 0; padding: 0 1.25rem; }
+</style>

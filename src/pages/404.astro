@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout title="Page Not Found | Orange County House Calls" description="The page you were looking for could not be found." noindex>
+  <section class="section nf">
+    <div class="narrow center">
+      <p class="eyebrow">404</p>
+      <h1>We couldn’t find that page.</h1>
+      <p class="lede">It may have moved. Try our services, or give us a call — we’re open 7 days, {SITE.hours.label}.</p>
+      <div class="btns">
+        <a href="/" class="btn btn--ghost">Home</a>
+        <a href="/services/" class="btn btn--ghost">All Services</a>
+        <a href={SITE.phoneHref} class="btn btn--gold"><Icon name="phone" /> {SITE.phone}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .nf { min-height: 60vh; display: grid; place-items: center; }
+  .btns { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+</style>

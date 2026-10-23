@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { pages } from '../lib/content';
+import { SITE } from '../data/site';
+import { breadcrumb } from '../lib/schema';
+
+const page = pages['/contact-us/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact Us', path: '/contact-us/' }];
+const contact = { '@type': 'ContactPage', url: `${SITE.url}/contact-us/`, name: page.title, about: { '@id': `${SITE.url}/#clinic` } };
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(`Orange County House Calls, ${SITE.address.street}, ${SITE.address.city}, ${SITE.address.region} ${SITE.address.postal}`)}&output=embed`;
+---
+<BaseLayout title={page.title} description={page.description} schema={[contact, breadcrumb(crumbs)]}>
+  <PageHero title={page.h1} eyebrow="Get In Touch" lede="We would love to hear from you. Give us a call, or get our address. Find everything you need to contact us here." crumbs={crumbs} />
+
+  <div id="sent-msg" class="sent" hidden>
+    <div class="container"><Icon name="check" size={18} /> Thank you — your appointment request was sent. We’ll be in touch shortly.</div>
+  </div>
+
+  <section class="section">
+    <div class="container contact">
+      <div class="prose reveal">
+        <p>When choosing a primary care provider, finding a professional you feel comfortable keeping a frank rapport with is important for the overall treatment experience. You must maintain an honest and open avenue of communication with your primary care provider; otherwise, you run the risk of inappropriate or inadequate treatment for true healthcare needs.</p>
+        <p>Here at Orange County House Calls, we recognize that communication is an essential tool for any successful treatment. In addition to scheduling an appointment in advance, we can also take patient questions related to your treatment plan. We can recommend the best course of action and notify you whether immediate attention is necessary. Call us at <a href={SITE.phoneHref}>{SITE.phone}</a> or visit our doctor's office in Aliso Viejo today.</p>
+        <p>Orange County House Calls offers a wide range of treatments. We treat major and severe conditions, such as deep cuts, abdominal pain, motor vehicle injuries, and palpitations. We also cover minor treatments such as cold and flu symptoms, minor rashes and burns, and UTIs. A full list of the treatments can be found on our <a href="/">home</a> and <a href="/services/">service pages</a>. Having a primary care physician present also allows patients to receive prompt care and return for continued treatment as necessary.</p>
+      </div>
+
+      <div class="cards reveal">
+        <h2>Contact Information</h2>
+        <a class="ci" href={SITE.phoneHref}><span class="icon-badge"><Icon name="phone" /></span><span><small>Call us</small><strong>{SITE.phone}</strong></span></a>
+        <a class="ci" href={SITE.directionsUrl} target="_blank" rel="noopener"><span class="icon-badge"><Icon name="pin" /></span><span><small>Visit</small><strong>{SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.postal}</strong></span></a>
+        <div class="ci"><span class="icon-badge"><Icon name="clock" /></span>
+          <span><small>Hours</small>
+            <table class="hours"><tbody>{days.map((d) => <tr><th scope="row">{d}:</th><td>6:00AM to 8:00PM</td></tr>)}</tbody></table>
+          </span>
+        </div>
+        <button type="button" class="btn btn--gold btn--block" data-open-appt><Icon name="calendar" /> Request Appointment</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="map" aria-label="Map to Orange County House Calls">
+    <iframe title="Map showing Orange County House Calls in Aliso Viejo, CA" src={mapSrc} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (max-width: 960px) { .contact { grid-template-columns: 1fr; } }
+  .cards { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 2rem; display: grid; gap: 1.1rem; box-shadow: var(--shadow); }
+  .cards h2 { font-size: 1.9rem; margin: 0; }
+  .ci { display: grid; grid-template-columns: 52px 1fr; gap: 1rem; align-items: start; text-decoration: none; color: var(--text); padding-bottom: 1.1rem; border-bottom: 1px solid var(--line); }
+  .ci .icon-badge { margin: 0; }
+  .ci small { display: block; text-transform: uppercase; letter-spacing: .14em; font-size: .72rem; font-weight: 700; color: var(--gold); }
+  .ci strong { color: var(--ink); font-size: 1.05rem; }
+  a.ci:hover strong { color: var(--gold); }
+  .hours { border-collapse: collapse; width: 100%; font-size: .9rem; margin-top: .2rem; }
+  .hours th { text-align: left; font-weight: 600; color: var(--ink); padding: .15rem 0; }
+  .hours td { text-align: right; color: var(--muted); }
+  .map iframe { display: block; width: 100%; height: 440px; border: 0; filter: grayscale(.35) contrast(1.05); }
+  .sent { background: #e8f4ee; color: var(--success); font-weight: 700; padding: 1rem 0; }
+  .sent .container { display: flex; gap: .5rem; align-items: center; }
+</style>
+
+<script>
+  if (new URLSearchParams(location.search).get('sent')) document.getElementById('sent-msg')?.removeAttribute('hidden');
+</script>

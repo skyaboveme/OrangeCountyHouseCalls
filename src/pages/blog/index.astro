@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import { posts, formatDate } from '../../lib/content';
+import { breadcrumb } from '../../lib/schema';
+import { SITE } from '../../data/site';
+
+const title = 'Patient Education Blog | Orange County House Calls, Aliso Viejo, CA';
+const description = 'Health articles from Orange County House Calls in Aliso Viejo, CA — concierge medicine, house calls, primary care, chronic disease management, weight loss and more.';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog/' }];
+const [lead, ...rest] = posts;
+const itemList = {
+  '@type': 'Blog',
+  '@id': `${SITE.url}/blog/#blog`,
+  name: 'Orange County House Calls Blog',
+  url: `${SITE.url}/blog/`,
+  blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.h1, url: `${SITE.url}${p.path}`, datePublished: p.published })),
+};
+---
+<BaseLayout title={title} description={description} schema={[itemList, breadcrumb(crumbs)]}>
+  <PageHero title="Recent Posts" eyebrow="Patient Education" lede="Practical, physician-reviewed guidance on staying healthy — from concierge care and house calls to managing chronic conditions." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container">
+      <a href={lead.path} class="lead card reveal">
+        <span class="tag">Latest</span>
+        <time datetime={lead.published ?? undefined}>{formatDate(lead.published)}</time>
+        <h2>{lead.h1}</h2>
+        <p>{lead.excerpt}</p>
+        <span class="read">Read article <Icon name="arrow" size={16} /></span>
+      </a>
+      <div class="grid grid-3 list">
+        {rest.map((p) => (
+          <a href={p.path} class="card post reveal">
+            <time datetime={p.published ?? undefined}>{formatDate(p.published)}</time>
+            <h3>{p.h1}</h3>
+            <p>{p.excerpt}</p>
+            <span class="read">Read more <Icon name="arrow" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead { padding: clamp(2rem, 4vw, 3rem); background: linear-gradient(150deg, #fff, var(--sand)); margin-bottom: 2rem; }
+  .lead h2 { font-size: clamp(1.9rem, 3.5vw, 2.8rem); margin: .5rem 0 .8rem; max-width: 26ch; }
+  .lead p { color: var(--muted); max-width: 70ch; }
+  .tag { display: inline-block; padding: .3rem .7rem; border-radius: 999px; background: var(--gold-grad); color: var(--ink); font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin-right: .75rem; }
+  time { font-size: .8rem; color: var(--gold); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .post { display: flex; flex-direction: column; }
+  .post h3 { font-size: 1.45rem; margin: .5rem 0 .6rem; }
+  .post p { color: var(--muted); font-size: .93rem; flex: 1; }
+  .read { display: inline-flex; gap: .4rem; align-items: center; font-weight: 700; font-size: .88rem; color: var(--ink); }
+  a.card:hover .read { color: var(--gold); }
+</style>

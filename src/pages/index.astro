@@ -1,0 +1,543 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import { Image } from 'astro:assets';
+import hero from '../assets/s1-new-2.jpg';
+import consult from '../assets/s1.jpg';
+import doc from '../assets/dr-khaneki-2607.jpg';
+import illnesses from '../assets/home-general-illnesses-400x200.jpg';
+import injuries from '../assets/home-injuries.jpg';
+import { SITE, MEMBERSHIP } from '../data/site';
+import { REVIEWS } from '../data/reviews';
+import { pages } from '../lib/content';
+import { medicalWebPage, breadcrumb } from '../lib/schema';
+
+const page = pages['/'];
+const title = page.title;
+const description = page.description;
+
+const pillars = [
+  { icon: 'stethoscope', title: 'Concierge Medicine', text: 'Explore how concierge medicine provides convenient, customizable care to prevent and treat health conditions.', href: '/aliso-viejo-ca/concierge-medicine/', cta: 'Click To Learn More' },
+  { icon: 'video', title: 'Telemedicine', text: 'Explore how telemedicine connects patients with physicians for convenient, high-quality care from anywhere.', href: '/aliso-viejo-ca/telemedicine/', cta: 'Learn More Here' },
+  { icon: 'home', title: 'In-Home Medical Care', text: 'Explore how in-home medical care makes it possible to receive comprehensive healthcare services in the comfort of your home.', href: SITE.phoneHref, cta: `Call Us ${SITE.phone}` },
+];
+
+const featured = [
+  { title: 'Medical Weight Loss', href: '/aliso-viejo-ca/weight-loss-treatment/', icon: 'scale', text: 'Physician-guided, personalized plans for safe and sustainable results.' },
+  { title: 'Geriatric Medicine', href: '/aliso-viejo-ca/geriatric-medicine/', icon: 'heart', text: 'Attentive care for seniors at home or in senior living communities.' },
+  { title: 'Primary Care', href: '/aliso-viejo-ca/primary-care/', icon: 'stethoscope', text: 'Your first point of contact for ongoing, preventive and acute care.' },
+  { title: 'Cold And Flu Treatment', href: '/aliso-viejo-ca/common-cold-and-flu-treatment/', icon: 'activity', text: 'Prompt evaluation and relief for cold, flu and respiratory symptoms.' },
+  { title: 'Personal Injury / Auto Accident', href: '/aliso-viejo-ca/personal-injury-auto-accident-care/', icon: 'car', text: 'Documentation, treatment and follow-up after accidents and injuries.' },
+  { title: 'Wellness', href: '/aliso-viejo-ca/wellness/', icon: 'leaf', text: 'Preventive screenings and long-term health optimization.' },
+];
+
+const homeReviews = REVIEWS.filter((r) => r.source === 'Google').slice(0, 6);
+const story = REVIEWS.find((r) => r.name === 'Omid H');
+
+const credentials = [
+  { icon: 'shield', big: 'Board-Certified', small: 'Internal Medicine' },
+  { icon: 'book', big: 'MD, MPH', small: 'Physician & public-health trained' },
+  { icon: 'star', big: 'Former Chief Resident', small: 'Ambulatory Clinic, Hurley Medical Center' },
+  { icon: 'clock', big: '7 Days a Week', small: SITE.hours.label },
+];
+
+const steps = [
+  { n: '01', title: 'Call or request a visit', text: `Reach our team at ${SITE.phone} or send a quick request online. Same-day or next-day appointments whenever possible.` },
+  { n: '02', title: 'Choose how you’re seen', text: 'A house call at your home or office, a telemedicine visit, or an in-office appointment in Aliso Viejo — whatever fits your day.' },
+  { n: '03', title: 'Get unrushed, ongoing care', text: 'Extended visits, a personalized care plan, and direct access to your physician for follow-up questions.' },
+];
+
+const compare = [
+  ['Long waits for an appointment', 'Same-day or next-day availability'],
+  ['Crowded waiting rooms', 'Care at home, office, or senior living'],
+  ['Rushed appointments', 'Extended, unrushed visits'],
+  ['Hard to reach your doctor', 'Direct access to your physician'],
+  ['Symptom-only treatment', 'Proactive prevention & long-term planning'],
+];
+
+const audiences = ['Busy professionals', 'Seniors & their families', 'Patients with mobility challenges', 'Families with busy schedules', 'Anyone who values privacy'];
+---
+<BaseLayout
+  title={title}
+  description={description}
+  schema={[medicalWebPage({ path: '/', title, description }), breadcrumb([{ name: 'Home', path: '/' }])]}
+>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <Image src={hero} alt="Dr. Sina Khaneki, board-certified Internal Medicine physician at Orange County House Calls" class="hero__img" widths={[640, 1024, 1440, 1835]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="hero__shade"></div>
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Personalized Medical Care, Delivered to Your Doorstep</p>
+        <h1 id="hero-title">Concierge Medicine &amp; <span class="gold-text">House Call Doctor</span> in Orange County</h1>
+        <p class="hero__lede">House calls, telemedicine and in-office visits with a board-certified Internal Medicine physician. Longer visits, direct physician access, and care that comes to you — anywhere in Orange County.</p>
+        <a href="/reviews/" class="proof" aria-label="Read patient reviews">
+          <span class="proof__stars" aria-hidden="true">{[1,2,3,4,5].map(() => <Icon name="star" size={16} />)}</span>
+          <span>Trusted by patients across South Orange County</span>
+        </a>
+        <div class="hero__ctas">
+          <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone}</a>
+          <button type="button" class="btn btn--light btn--lg" data-open-appt><Icon name="calendar" /> Book a Visit</button>
+        </div>
+        <p class="hero__micro"><Icon name="check" size={15} /> Same-day or next-day appointments <span>·</span> <Icon name="check" size={15} /> Speak directly with the doctor</p>
+        <ul class="hero__chips">
+          <li><Icon name="shield" size={16} /> Board-certified Internal Medicine</li>
+          <li><Icon name="clock" size={16} /> Open 7 days · {SITE.hours.label}</li>
+          <li><Icon name="pin" size={16} /> {SITE.address.city}, CA</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars" aria-label="How we deliver care">
+    <div class="container grid grid-3">
+      {pillars.map((p, i) => (
+        <a href={p.href} class="card pillar reveal" style={`transition-delay:${i * 80}ms`}>
+          <span class="icon-badge"><Icon name={p.icon} /></span>
+          <h2 class="pillar__title">{p.title}</h2>
+          <p>{p.text}</p>
+          <span class="pillar__cta">{p.cta} <Icon name="arrow" size={16} /></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- AUTHORITY STRIP -->
+  <section class="creds" aria-label="Physician credentials">
+    <div class="container creds__grid">
+      {credentials.map((c) => (
+        <div class="cred reveal">
+          <Icon name={c.icon} size={22} />
+          <div><strong>{c.big}</strong><span>{c.small}</span></div>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="section welcome" aria-labelledby="welcome-title">
+    <div class="container welcome__grid">
+      <div class="welcome__media reveal">
+        <Image src={doc} alt="Portrait of Dr. Sina Khaneki, MD, MPH" width={450} height={600} class="welcome__doc" />
+        <div class="welcome__badge">
+          <strong>Sina Khaneki, MD, MPH</strong>
+          <span>Internal Medicine</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Welcome</p>
+        <h2 id="welcome-title">Orange County House Calls</h2>
+        <p class="lede">At Orange County HouseCalls, our mission is to provide personalized, high-quality internal medicine care through house calls, telemedicine, and in-office visits.</p>
+        <p>Our concierge medicine approach allows us to offer direct physician access, longer and more meaningful visits, and a more personalized healthcare experience. We are committed to making medical care more convenient, accessible, and patient-centered by delivering thoughtful care in the comfort of your home, office, or our clinic. Our goal is to build lasting relationships with patients while providing care tailored to each person’s health needs, lifestyle, and comfort.</p>
+        <ul class="ticks">
+          <li><Icon name="check" size={18} /> Direct access to your physician</li>
+          <li><Icon name="check" size={18} /> Same-day or next-day availability</li>
+          <li><Icon name="check" size={18} /> Longer, unrushed visits</li>
+          <li><Icon name="check" size={18} /> Care at home, office, or senior living</li>
+        </ul>
+        <div class="welcome__ctas">
+          <a href="/about/" class="btn btn--ghost">Meet Dr. Khaneki <Icon name="arrow" /></a>
+          <a href={SITE.phoneHref} class="link-cta"><Icon name="phone" size={16} /> Or call {SITE.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section--sand steps" aria-labelledby="steps-title">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">How It Works</p>
+        <h2 id="steps-title">Better care in three simple steps</h2>
+        <p class="lede">No waiting rooms. No rushed appointments. Just a physician who makes time for you.</p>
+      </div>
+      <ol class="steps__list">
+        {steps.map((s, i) => (
+          <li class="step reveal" style={`transition-delay:${i * 90}ms`}>
+            <span class="step__n">{s.n}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="center steps__cta reveal">
+        <button type="button" class="btn btn--gold btn--lg" data-open-appt><Icon name="calendar" /> Request Your Appointment</button>
+        <p class="micro">Prefer to talk? Call <a href={SITE.phoneHref}>{SITE.phone}</a> — open 7 days, {SITE.hours.label}.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOUSE CALLS -->
+  <section class="section section--ink housecalls" aria-labelledby="hc-title">
+    <div class="container housecalls__grid">
+      <div class="reveal">
+        <p class="eyebrow">HouseCalls</p>
+        <h2 id="hc-title">We Come to You — <span class="gold-text">Anywhere in Orange County</span></h2>
+        <p>At Orange County HouseCalls, we bring personalized medical care directly to your home, office, or senior living community, offering a more convenient and comfortable alternative to traditional office visits. Led by a board-certified Internal Medicine physician, our practice is designed for patients who value privacy, accessibility, and a higher level of individualized care.</p>
+        <p>We provide evaluation and treatment for a broad range of non-emergency medical concerns, including cold and flu symptoms, allergies, asthma, fever, sinus infections, respiratory illnesses, food poisoning, and other common health issues. Each visit is conducted with the time and attention needed to fully understand your concerns and develop a care plan that is thoughtful, thorough, and tailored to you.</p>
+        <p>Our house call model is ideal for busy professionals, elderly patients, individuals with transportation or mobility challenges, and anyone seeking a more personalized healthcare experience. Instead of sitting in crowded waiting rooms or navigating long office delays, you can receive quality medical care in the comfort of your own environment.</p>
+        <p class="aud__label">Ideal for</p>
+        <ul class="aud">{audiences.map((a) => <li><Icon name="check" size={15} /> {a}</li>)}</ul>
+        <div class="hc__ctas">
+          <a href={SITE.phoneHref} class="btn btn--gold"><Icon name="phone" /> Schedule a House Call</a>
+          <a href="/aliso-viejo-ca/primary-care/" class="btn btn--light">Read More <Icon name="arrow" /></a>
+        </div>
+      </div>
+      <div class="housecalls__media reveal">
+        <Image src={consult} alt="Physician consulting with a patient in the comfort of her home" widths={[600, 900, 1200]} sizes="(max-width: 900px) 100vw, 50vw" class="housecalls__img" />
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED STORY -->
+  {story && (
+    <section class="story" aria-label="Patient story">
+      <div class="container story__inner reveal">
+        <span class="story__mark" aria-hidden="true">“</span>
+        <blockquote>
+          <p>{story.text}</p>
+          <footer>
+            <span class="proof__stars" aria-hidden="true">{[1,2,3,4,5].map(() => <Icon name="star" size={15} />)}</span>
+            <cite>— {story.name}, Orange County House Calls patient</cite>
+          </footer>
+        </blockquote>
+      </div>
+    </section>
+  )}
+
+  <!-- CONCIERGE -->
+  <section class="section concierge" aria-labelledby="cm-title">
+    <div class="container concierge__grid">
+      <header class="concierge__head reveal">
+        <p class="eyebrow">Concierge Medicine</p>
+        <h2 id="cm-title">Healthcare that is personal, efficient, and centered around you.</h2>
+        <p class="lede">Concierge medicine offers a more personalized, accessible, and patient-centered approach to healthcare, designed for individuals who value convenience, privacy, and a higher level of attention from their physician.</p>
+        <div class="compare" role="table" aria-label="Traditional care compared with Orange County House Calls">
+          <div class="compare__row compare__row--head" role="row">
+            <span role="columnheader">Traditional care</span>
+            <span role="columnheader">OC House Calls</span>
+          </div>
+          {compare.map(([a, b]) => (
+            <div class="compare__row" role="row">
+              <span role="cell" class="compare__bad"><Icon name="x" size={15} /> {a}</span>
+              <span role="cell" class="compare__good"><Icon name="check" size={15} /> {b}</span>
+            </div>
+          ))}
+        </div>
+        <a href="/aliso-viejo-ca/concierge-medicine/" class="btn btn--ghost">Explore Concierge Medicine <Icon name="arrow" /></a>
+      </header>
+      <div class="prose concierge__body reveal">
+        <p>At Orange County HouseCalls, our concierge model allows patients to move away from the limitations of traditional healthcare—such as long wait times, rushed appointments, and crowded waiting rooms—and instead experience care that is thoughtful, thorough, and tailored to their individual needs.</p>
+        <p>As a concierge patient, you benefit from extended, unrushed visits with a board-certified Internal Medicine physician who takes the time to understand your full medical history, lifestyle, and health goals. This approach allows for more accurate diagnoses, proactive prevention, and personalized treatment plans that go beyond simply addressing symptoms. Our focus is on building a strong, ongoing relationship between patient and physician, ensuring continuity of care and a deeper understanding of your health over time.</p>
+        <details class="more-copy">
+          <summary>Read the full overview <Icon name="chevron" size={16} /></summary>
+        <p>Convenience is a central part of concierge medicine. With Orange County HouseCalls, you have direct access to your physician along with same-day or next-day availability for appointments. Care is delivered wherever you are most comfortable—whether at home, in your office, or within a senior living community—eliminating the need to travel or spend time in waiting rooms. This is especially valuable for busy professionals, older adults, individuals with mobility challenges, and families seeking attentive, reliable care for their loved ones.</p>
+        <p>Our concierge services also emphasize preventive care and long-term health optimization. By having more time during each visit and better access to your physician, we are able to focus on early detection of health concerns, ongoing management of chronic conditions, and lifestyle-based strategies that support overall well-being. This proactive approach can help reduce unnecessary urgent care visits, emergency room visits, and hospitalizations.</p>
+        <p>In addition, concierge medicine provides a level of flexibility and responsiveness that is difficult to achieve in traditional settings. Whether you need prompt evaluation for an acute concern, ongoing management of a chronic condition, medication adjustments, or coordination of care with specialists, our team is committed to delivering timely, high-quality service with attention to detail.</p>
+        <p>At Orange County HouseCalls, concierge medicine is about more than convenience—it is about creating a healthcare experience that is personal, efficient, and centered around you. By combining medical expertise with accessibility and individualized care, we strive to provide a higher standard of service that supports your health with the attention and respect you deserve.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEIGHT LOSS + MEMBERSHIP -->
+  <section class="section section--sand" aria-labelledby="wl-title">
+    <div class="container wl__grid">
+      <div class="reveal">
+        <p class="eyebrow">Medical Weight Loss</p>
+        <h2 id="wl-title">A physician-guided path to a healthy weight.</h2>
+        <p>Medical weight loss at Orange County HouseCalls offers a personalized, physician-guided approach to achieving and maintaining a healthy weight. Unlike one-size-fits-all programs or fad diets, our medical weight loss plans are tailored to each patient’s unique health profile, lifestyle, and goals. Under the supervision of a board-certified Internal Medicine physician, we take the time to evaluate underlying factors that may be contributing to weight gain, including metabolic conditions, hormonal imbalances, medications, and lifestyle habits.</p>
+        <p>Our program focuses on safe, sustainable results through a combination of clinical evaluation, individualized nutrition guidance, lifestyle modifications, and, when appropriate, evidence-based medical therapies. Patients receive ongoing support, regular follow-up, and adjustments to their plan to ensure steady progress and long-term success. This comprehensive approach not only helps with weight reduction but also improves overall health, including blood pressure, blood sugar control, energy levels, and cardiovascular risk.</p>
+        <p>Designed for busy individuals who value convenience and personalized care, our medical weight loss services can be delivered through in-home visits or telemedicine, allowing you to receive expert guidance without disrupting your daily routine. Whether your goal is to lose weight, improve your health, or prevent chronic disease, our program provides a structured, medically supervised path to help you achieve lasting results in a safe and supportive environment.</p>
+        <a href="/aliso-viejo-ca/weight-loss-treatment/" class="btn btn--ghost">Read More <Icon name="arrow" /></a>
+      </div>
+
+      <div class="price reveal" id="membership">
+        <span class="price__tag">Membership</span>
+        <h3 class="price__name">{MEMBERSHIP.name}</h3>
+        <div class="price__amt">
+          <div><strong>$500</strong><span>/visit</span></div>
+          <div class="price__or">or</div>
+          <div><strong>$500</strong><span>/month</span><small>{MEMBERSHIP.monthlyNote}</small></div>
+        </div>
+        <p class="price__inc">Includes:</p>
+        <ul class="price__list">
+          {MEMBERSHIP.includes.map((i) => <li><Icon name="check" size={18} /> {i}</li>)}
+        </ul>
+        <a href="/membership/" class="btn btn--gold btn--block">See Everything Included <Icon name="arrow" /></a>
+        <p class="price__help">Questions about membership? Talk with our team: <a href={SITE.phoneHref}>{SITE.phone}</a></p>
+        <p class="price__disc">{MEMBERSHIP.disclaimer}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" aria-labelledby="svc-title">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">Our Services</p>
+        <h2 id="svc-title">Featured Services</h2>
+        <p class="lede">We practice general internal medicine — treating most health conditions and referring to specialists when necessary.</p>
+      </div>
+      <div class="svc-media grid grid-2 reveal">
+        <a href="/aliso-viejo-ca/general-illnesses/" class="svc-feature">
+          <Image src={illnesses} alt="Treatment for general illnesses" width={400} height={200} />
+          <span><strong>General Illnesses</strong> Colds, flu, infections and more <Icon name="arrow" size={16} /></span>
+        </a>
+        <a href="/aliso-viejo-ca/cut-and-bruise-treatment/" class="svc-feature">
+          <Image src={injuries} alt="Treatment for minor injuries" width={440} height={220} />
+          <span><strong>Injuries</strong> Cuts, sprains, burns and accident care <Icon name="arrow" size={16} /></span>
+        </a>
+      </div>
+      <div class="grid grid-3 svc-grid">
+        {featured.map((f, i) => (
+          <a href={f.href} class="card svc reveal" style={`transition-delay:${(i % 3) * 70}ms`}>
+            <span class="icon-badge"><Icon name={f.icon} /></span>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+            <span class="pillar__cta">Learn more <Icon name="arrow" size={16} /></span>
+          </a>
+        ))}
+      </div>
+      <div class="center" style="margin-top:2.5rem"><a href="/services/" class="btn btn--ghost">View all Services <Icon name="arrow" /></a></div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="section section--sand" aria-labelledby="why-title">
+    <div class="container why__grid">
+      <div class="reveal">
+        <p class="eyebrow">Why Choose Us</p>
+        <h2 id="why-title">Quick and easy access to quality healthcare.</h2>
+        <p>Our team is committed to providing patients with quick and easy access to quality healthcare. We provide personalized care to ensure that patients with urgent health needs receive the help and support they require. We work with our patients through every step of their treatment, addressing each question and concern. By listening to our patients' input, we can provide effective and prompt solutions that improve their health while keeping them comfortable and satisfied throughout treatment.</p>
+        <p>Primary care providers are the first point of contact for medical care. We practice general medicine, meaning we can treat most health conditions and refer patients out to specialists as necessary. We can also be there for patients who need ongoing treatment. This may involve overseeing your day-to-day health needs or helping you make decisions regarding your treatment. Seeing a primary care provider is also an integral part of preventative care.</p>
+      </div>
+      <div class="info reveal">
+        <div class="info__row">
+          <span class="icon-badge"><Icon name="pin" /></span>
+          <div><h3>Location</h3><p>{SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.postal}</p><a href={SITE.directionsUrl} target="_blank" rel="noopener">Get Directions →</a></div>
+        </div>
+        <div class="info__row">
+          <span class="icon-badge"><Icon name="clock" /></span>
+          <div>
+            <h3>Hours</h3>
+            <table class="hours">
+              <tbody>
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((d) => (
+                  <tr><th scope="row">{d}</th><td>6:00AM to 8:00PM</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="info__row">
+          <span class="icon-badge"><Icon name="phone" /></span>
+          <div><h3>Book Today!</h3><p><a href={SITE.phoneHref} class="info__phone">{SITE.phone}</a></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" aria-labelledby="t-title">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">Testimonials</p>
+        <h2 id="t-title">Real patients. Real peace of mind.</h2>
+        <p class="lede">Hear from Orange County families who switched to a doctor who comes to them.</p>
+      </div>
+      <div class="grid grid-3 reviews">
+        {homeReviews.map((r) => <div class="reveal"><ReviewCard review={r} /></div>)}
+      </div>
+      <div class="center" style="margin-top:2.5rem; display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap">
+        <button type="button" class="btn btn--gold" data-open-appt><Icon name="calendar" /> Book Your Visit</button>
+        <a href="/reviews/" class="btn btn--ghost">Read More Reviews <Icon name="arrow" /></a>
+        <a href={SITE.reviewUrl} target="_blank" rel="noopener" class="btn btn--ghost"><Icon name="google" /> Review us on Google</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AREAS -->
+  <section class="section section--ink areas" aria-labelledby="areas-title">
+    <div class="container center">
+      <p class="eyebrow">About</p>
+      <h2 id="areas-title">Concierge care, 24/7, across South Orange County</h2>
+      <p class="lede" style="color:#b9c4d1">{SITE.about}</p>
+      <ul class="areas__list">{SITE.areas.map((a) => <li>{a}</li>)}</ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero { position: relative; min-height: min(88vh, 760px); display: flex; align-items: center; overflow: hidden; background: var(--ink); isolation: isolate; }
+  .hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 20% center; z-index: -2; animation: heroZoom 18s ease-out both; }
+  @keyframes heroZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+  .hero__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(14,27,42,0) 18%, rgba(14,27,42,.55) 45%, rgba(14,27,42,.94) 62%, var(--ink) 100%); }
+  .hero__inner { display: flex; justify-content: flex-end; padding: 5rem 0; }
+  .hero__copy { max-width: 600px; color: #c9d3de; animation: rise 1s var(--ease) .15s both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+  .hero h1 { color: #fff; font-size: clamp(2.5rem, 5.2vw, 4.4rem); margin-bottom: 1.25rem; }
+  .hero .eyebrow { color: var(--gold-2); }
+  .hero__lede { font-size: 1.15rem; max-width: 52ch; }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0 1rem; }
+  .proof { display: inline-flex; align-items: center; gap: .6rem; margin-top: .5rem; font-size: .9rem; color: #e6ebf1; text-decoration: none; }
+  .proof:hover { color: var(--gold-2); }
+  .proof__stars { display: inline-flex; gap: 2px; color: var(--gold-2); }
+  .hero__micro { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; font-size: .85rem; color: #aab6c4; margin: 0 0 1.5rem; }
+  .hero__micro :global(svg) { color: var(--gold-2); }
+  .hero__micro span { opacity: .5; margin: 0 .25rem; }
+  .hero__chips { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+  .hero__chips li { display: inline-flex; align-items: center; gap: .45rem; padding: .5rem .85rem; border-radius: 999px; font-size: .82rem; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: #dfe6ee; }
+  .hero__chips :global(svg) { color: var(--gold-2); }
+  @media (max-width: 900px) {
+    .hero { min-height: auto; flex-direction: column; align-items: stretch; }
+    .hero__img { position: relative; height: 54vw; min-height: 260px; object-position: 18% 20%; }
+    .hero__shade { background: linear-gradient(180deg, rgba(14,27,42,0) 0, rgba(14,27,42,0) calc(max(54vw, 260px) - 90px), var(--ink) max(54vw, 260px)); }
+    .hero__inner { padding: 2rem 0 3.5rem; margin-top: 0; }
+  }
+
+  /* Pillars */
+  .pillars { position: relative; z-index: 2; margin-top: -4rem; }
+  @media (max-width: 900px) { .pillars { margin-top: 0; padding-top: 2.5rem; } }
+  .pillar { padding: 2.1rem; }
+  .pillar__title { font-size: 1.65rem; }
+  .pillar p, .svc p { color: var(--muted); font-size: .97rem; }
+  .pillar__cta { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; color: var(--gold); font-size: .9rem; }
+  a.card:hover .pillar__cta :global(svg) { transform: translateX(4px); }
+  .pillar__cta :global(svg) { transition: transform .25s var(--ease); }
+
+  /* Welcome */
+  .welcome__grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+  @media (max-width: 900px) { .welcome__grid { grid-template-columns: 1fr; } }
+  .welcome__media { position: relative; max-width: 440px; }
+  .welcome__media::before { content: ''; position: absolute; inset: 1.5rem -1.5rem -1.5rem 1.5rem; border: 1px solid var(--gold-2); border-radius: var(--radius-lg); }
+  .welcome__doc { position: relative; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; }
+  .welcome__badge { position: absolute; left: -1rem; bottom: 2rem; background: #fff; padding: 1rem 1.25rem; border-radius: 14px; box-shadow: var(--shadow); border-left: 3px solid var(--gold); }
+  .welcome__badge strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: 1.25rem; }
+  .welcome__badge span { font-size: .8rem; color: var(--gold); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .ticks { list-style: none; padding: 0; margin: 1.5rem 0 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: .7rem 1.25rem; }
+  @media (max-width: 560px) { .ticks { grid-template-columns: 1fr; } }
+  .ticks li { display: flex; gap: .55rem; align-items: center; font-weight: 600; color: var(--ink); font-size: .95rem; }
+  .ticks :global(svg) { color: var(--gold); flex: none; }
+
+  /* House calls */
+  .housecalls__grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  @media (max-width: 900px) { .housecalls__grid { grid-template-columns: 1fr; } }
+  .housecalls .eyebrow { color: var(--gold-2); }
+  .housecalls__media { border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4 / 5; box-shadow: 0 30px 80px -30px rgba(0,0,0,.6); border: 1px solid rgba(214,184,120,.3); }
+  .housecalls__img { width: 100%; height: 100%; object-fit: cover; object-position: 30% center; }
+  @media (max-width: 900px) { .housecalls__media { aspect-ratio: 16 / 10; } }
+
+  /* Authority strip */
+  .creds { padding: clamp(2.5rem, 5vw, 3.5rem) 0 0; }
+  .creds__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+  @media (max-width: 900px) { .creds__grid { grid-template-columns: 1fr 1fr; } }
+  .cred { display: flex; gap: .85rem; align-items: center; padding: 1.25rem 1.4rem; background: #fff; }
+  .cred > :global(svg) { color: var(--gold); flex: none; }
+  .cred strong { display: block; font-family: var(--font-display); font-size: 1.3rem; color: var(--ink); line-height: 1.15; }
+  .cred span { font-size: .8rem; color: var(--muted); }
+  @media (max-width: 480px) { .cred { padding: 1rem; } .cred strong { font-size: 1.1rem; } }
+
+  .welcome__ctas { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; }
+  .link-cta { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; color: var(--ink); text-decoration: none; }
+  .link-cta :global(svg) { color: var(--gold); }
+
+  /* Steps */
+  .steps__list { list-style: none; padding: 0; margin: 3rem 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; counter-reset: none; }
+  @media (max-width: 900px) { .steps__list { grid-template-columns: 1fr; } }
+  .step { position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 2rem 1.75rem; box-shadow: var(--shadow-sm); }
+  .step__n { display: inline-block; font-family: var(--font-display); font-size: 2.6rem; line-height: 1; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: .75rem; }
+  .step h3 { font-size: 1.45rem; }
+  .step p { color: var(--muted); margin: 0; font-size: .97rem; }
+  .steps__cta { margin-top: 2.5rem; }
+  .micro { font-size: .88rem; color: var(--muted); margin: .9rem 0 0; }
+  .micro a { font-weight: 700; }
+
+  /* Audience + house-call CTAs */
+  .aud__label { font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 800; color: var(--gold-2); margin: 1.5rem 0 .6rem; }
+  .aud { list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .aud li { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .85rem; border-radius: 999px; border: 1px solid rgba(214,184,120,.35); font-size: .85rem; color: #e6ebf1; }
+  .aud :global(svg) { color: var(--gold-2); }
+  .hc__ctas { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+  /* Story */
+  .story { background: #000; color: #e9e9e9; padding: clamp(3.5rem, 7vw, 5.5rem) 0; position: relative; overflow: hidden; }
+  .story::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px 260px at 15% 0%, rgba(214,184,120,.18), transparent 70%); }
+  .story__inner { position: relative; max-width: 900px; text-align: center; }
+  .story__mark { display: block; font-family: var(--font-display); font-size: 6rem; line-height: .6; height: 3rem; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .story blockquote { margin: 0; }
+  .story blockquote p { font-family: var(--font-display); font-size: clamp(1.3rem, 2.4vw, 1.8rem); line-height: 1.45; color: #fff; font-style: italic; }
+  .story footer { display: flex; flex-direction: column; align-items: center; gap: .5rem; margin-top: 1.5rem; }
+  .story cite { font-style: normal; font-weight: 700; color: var(--gold-2); font-size: .95rem; }
+
+  /* Compare */
+  .compare { margin: 1.75rem 0 2rem; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; background: #fff; box-shadow: var(--shadow-sm); }
+  .compare__row { display: grid; grid-template-columns: 1fr 1fr; }
+  .compare__row + .compare__row { border-top: 1px solid var(--line); }
+  .compare__row > span { display: flex; gap: .5rem; align-items: flex-start; padding: .8rem 1rem; font-size: .88rem; line-height: 1.4; }
+  .compare__row--head > span { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 800; color: var(--muted); background: var(--sand); }
+  .compare__row--head > span:last-child { background: var(--ink); color: var(--gold-2); }
+  .compare__bad { color: var(--muted); }
+  .compare__bad :global(svg) { color: #b4544a; flex: none; margin-top: .15rem; }
+  .compare__good { color: var(--ink); font-weight: 600; background: rgba(214,184,120,.08); }
+  .compare__good :global(svg) { color: var(--gold); flex: none; margin-top: .15rem; }
+  .more-copy summary { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; font-weight: 700; color: var(--gold); list-style: none; margin: .25rem 0 1rem; }
+  .more-copy summary::-webkit-details-marker { display: none; }
+  .more-copy[open] summary :global(svg) { transform: rotate(180deg); }
+  .price__help { font-size: .85rem; text-align: center; margin: 1rem 0 0; color: #c4cedb; }
+  .price__help a { color: var(--gold-2); font-weight: 700; }
+
+  /* Concierge */
+  .concierge__grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+  .concierge__head { position: sticky; top: calc(var(--header-h) + 2rem); }
+  @media (max-width: 900px) { .concierge__grid { grid-template-columns: 1fr; } .concierge__head { position: static; } }
+  .concierge__body p:first-child::first-letter { font-family: var(--font-display); font-size: 3.6rem; float: left; line-height: .9; padding: .3rem .6rem 0 0; color: var(--gold); }
+
+  /* Weight loss + price */
+  .wl__grid { display: grid; grid-template-columns: 1.25fr .85fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (max-width: 960px) { .wl__grid { grid-template-columns: 1fr; } }
+  .price { position: relative; background: linear-gradient(165deg, var(--ink), var(--ink-3)); color: #c4cedb; border-radius: 26px; padding: 2.4rem 2rem 2rem; box-shadow: var(--shadow-lg); overflow: hidden; }
+  .price::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: var(--gold-grad); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .price__tag { display: inline-block; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 800; color: var(--ink); background: var(--gold-grad); padding: .35rem .75rem; border-radius: 999px; }
+  .price__name { color: #fff; font-size: 2.1rem; margin: 1rem 0 1.25rem; }
+  .price__amt { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 0; border-block: 1px solid rgba(255,255,255,.1); margin-bottom: 1.25rem; }
+  .price__amt strong { font-family: var(--font-display); font-size: 2.8rem; color: #fff; line-height: 1; }
+  .price__amt span { color: var(--gold-2); font-weight: 700; margin-left: .15rem; }
+  .price__amt small { display: block; font-size: .75rem; color: #8d9bad; margin-top: .3rem; }
+  .price__or { font-family: var(--font-display); font-style: italic; color: var(--gold-2); font-size: 1.2rem; }
+  .price__inc { font-weight: 700; color: #fff; margin-bottom: .5rem; }
+  .price__list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: .6rem; }
+  .price__list li { display: flex; gap: .6rem; align-items: center; }
+  .price__list :global(svg) { color: var(--gold-2); }
+  .price__disc { font-size: .74rem; color: #7f8ea1; margin: 1rem 0 0; line-height: 1.55; }
+
+  /* Services */
+  .svc-media { margin: 2.5rem 0 1.5rem; }
+  .svc-feature { position: relative; display: block; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 2 / 1; text-decoration: none; box-shadow: var(--shadow-sm); }
+  .svc-feature :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+  .svc-feature:hover :global(img) { transform: scale(1.05); }
+  .svc-feature span { position: absolute; inset: auto 0 0 0; padding: 1.25rem 1.5rem; background: linear-gradient(0deg, rgba(14,27,42,.92), rgba(14,27,42,0)); color: #dfe6ee; display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; font-size: .92rem; }
+  .svc-feature strong { font-family: var(--font-display); font-size: 1.7rem; color: #fff; font-weight: 600; width: 100%; }
+  .svc h3 { font-size: 1.5rem; }
+
+  /* Why */
+  .why__grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (max-width: 960px) { .why__grid { grid-template-columns: 1fr; } }
+  .info { background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--line); padding: 1.75rem; display: grid; gap: 1.5rem; box-shadow: var(--shadow-sm); }
+  .info__row { display: grid; grid-template-columns: 52px 1fr; gap: 1rem; }
+  .info__row .icon-badge { margin: 0; }
+  .info h3 { font-size: 1.3rem; margin-bottom: .3rem; }
+  .info p { margin: 0 0 .3rem; }
+  .info a { font-weight: 700; text-decoration: none; }
+  .info__phone { font-family: var(--font-display); font-size: 1.8rem; color: var(--ink); }
+  .hours { border-collapse: collapse; width: 100%; font-size: .9rem; }
+  .hours th { text-align: left; font-weight: 600; color: var(--ink); padding: .2rem 0; }
+  .hours td { text-align: right; color: var(--muted); }
+
+  .reviews { margin-top: 2.5rem; }
+
+  .areas .eyebrow { color: var(--gold-2); }
+  .areas__list { list-style: none; padding: 0; margin: 2rem auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; max-width: 900px; }
+  .areas__list li { padding: .5rem 1rem; border-radius: 999px; border: 1px solid rgba(214,184,120,.35); color: #e6ebf1; font-size: .88rem; }
+</style>

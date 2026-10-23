@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { services, posts } from '../lib/content';
+import { NAV } from '../data/site';
+import { breadcrumb } from '../lib/schema';
+
+const title = 'Sitemap for Orange County House Calls in Aliso Viejo, CA';
+const description = 'Browse every page on the Orange County House Calls website — services, patient education, blog articles and more.';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Sitemap', path: '/sitemap/' }];
+const main = NAV.filter((n) => !n.children);
+const extra = [
+  { label: 'Services', href: '/services/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'Aliso Viejo, CA', href: '/aliso-viejo-ca/' },
+  { label: 'Primary Care Physician Terminology', href: '/primary-care-physician-terminology/' },
+  { label: 'Privacy Policy', href: '/privacy-policy/' },
+];
+---
+<BaseLayout title={title} description={description} schema={[breadcrumb(crumbs)]}>
+  <PageHero title="Sitemap" eyebrow="Find Your Way" crumbs={crumbs} />
+  <section class="section">
+    <div class="container cols">
+      <div>
+        <h2>Pages</h2>
+        <ul>{[...main, ...extra].map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2>Services</h2>
+        <ul>{services.map((s) => <li><a href={s.path}>{s.name}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2>Blog</h2>
+        <ul>{posts.map((p) => <li><a href={p.path}>{p.h1}</a></li>)}</ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 2.5rem; }
+  .cols h2 { font-size: 1.8rem; border-bottom: 1px solid var(--gold-2); padding-bottom: .5rem; }
+  .cols ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; font-size: .95rem; }
+  .cols a { text-decoration: none; color: var(--text); }
+  .cols a:hover { color: var(--gold); }
+</style>

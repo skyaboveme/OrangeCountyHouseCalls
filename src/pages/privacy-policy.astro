@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { pages } from '../lib/content';
+import { breadcrumb } from '../lib/schema';
+
+const page = pages['/privacy-policy/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Privacy Policy', path: '/privacy-policy/' }];
+const html = page.html.replace(/<h4>/g, '<h3>').replace(/<\/h4>/g, '</h3>');
+---
+<BaseLayout title={page.title} description={page.description || 'Privacy policy for Orange County House Calls in Aliso Viejo, CA.'} schema={[breadcrumb(crumbs)]}>
+  <PageHero title={page.h1} eyebrow="Legal" crumbs={crumbs} />
+  <section class="section">
+    <div class="narrow prose" set:html={html} />
+  </section>
+</BaseLayout>

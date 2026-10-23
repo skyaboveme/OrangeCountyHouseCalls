@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FAQList from '../components/FAQList.astro';
+import Icon from '../components/Icon.astro';
+import { MEMBERSHIP, SITE } from '../data/site';
+import { breadcrumb, faqPage, medicalWebPage } from '../lib/schema';
+
+const title = 'Concierge Medicine Membership | Orange County House Calls, Aliso Viejo CA';
+const description = 'Premier concierge membership in Aliso Viejo: $500/visit or $500/month with a 1-year membership. Includes in-office visits, telemedicine and house calls with a board-certified internist.';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Membership', path: '/membership/' }];
+---
+<BaseLayout title={title} description={description} schema={[medicalWebPage({ path: '/membership/', title, description }), breadcrumb(crumbs), faqPage(MEMBERSHIP.faqs)]}>
+  <PageHero title="Membership" eyebrow="Personalized Medical Care. Delivered to your doorstep" lede="Direct physician access, longer visits, and a more convenient care experience — at home, by video, or in our Aliso Viejo office." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container plan">
+      <div class="price reveal">
+        <span class="price__tag">Most Popular</span>
+        <h2 class="price__name">{MEMBERSHIP.name}</h2>
+        <div class="price__amt">
+          <div><strong>$500</strong><span>/visit</span></div>
+          <div class="price__or">or</div>
+          <div><strong>$500</strong><span>/month</span><small>{MEMBERSHIP.monthlyNote}</small></div>
+        </div>
+        <p class="price__inc">Includes:</p>
+        <ul class="price__list">{MEMBERSHIP.includes.map((i) => <li><Icon name="check" size={18} /> {i}</li>)}</ul>
+        <a href={SITE.phoneHref} class="btn btn--gold btn--block"><Icon name="phone" /> Call {SITE.phone}</a>
+        <button type="button" class="btn btn--light btn--block" data-open-appt style="margin-top:.6rem">Request Appointment</button>
+        <p class="price__disc"><em>{MEMBERSHIP.disclaimer}</em></p>
+      </div>
+
+      <div class="reveal">
+        <p class="eyebrow">Benefits</p>
+        <h2>Everything a concierge relationship should be.</h2>
+        <ul class="benefits">
+          {MEMBERSHIP.benefits.map((b) => <li><span><Icon name="check" size={16} /></span>{b}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="narrow">
+      <div class="center reveal">
+        <p class="eyebrow">Questions</p>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="reveal" style="margin-top:2rem"><FAQList faqs={MEMBERSHIP.faqs} /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="narrow center reveal">
+      <p class="eyebrow">Contact Us</p>
+      <h2>Ready to get started?</h2>
+      <p class="lede">Orange County House Calls is located at <a href={SITE.directionsUrl} target="_blank" rel="noopener">{SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.postal}</a>.</p>
+      <a href={SITE.phoneHref} class="btn btn--gold"><Icon name="phone" /> {SITE.phone}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .plan { display: grid; grid-template-columns: 420px 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  @media (max-width: 960px) { .plan { grid-template-columns: 1fr; } }
+  .price { position: sticky; top: calc(var(--header-h) + 1.5rem); background: linear-gradient(165deg, var(--ink), var(--ink-3)); color: #c4cedb; border-radius: 26px; padding: 2.4rem 2rem 2rem; box-shadow: var(--shadow-lg); border: 1px solid rgba(214,184,120,.45); }
+  @media (max-width: 960px) { .price { position: static; } }
+  .price__tag { display: inline-block; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 800; color: var(--ink); background: var(--gold-grad); padding: .35rem .75rem; border-radius: 999px; }
+  .price__name { color: #fff; font-size: 2.3rem; margin: 1rem 0 1.25rem; }
+  .price__amt { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 0; border-block: 1px solid rgba(255,255,255,.1); margin-bottom: 1.25rem; }
+  .price__amt strong { font-family: var(--font-display); font-size: 3rem; color: #fff; line-height: 1; }
+  .price__amt span { color: var(--gold-2); font-weight: 700; margin-left: .15rem; }
+  .price__amt small { display: block; font-size: .75rem; color: #8d9bad; margin-top: .3rem; }
+  .price__or { font-family: var(--font-display); font-style: italic; color: var(--gold-2); font-size: 1.2rem; }
+  .price__inc { font-weight: 700; color: #fff; margin-bottom: .5rem; }
+  .price__list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: .6rem; }
+  .price__list li { display: flex; gap: .6rem; align-items: center; }
+  .price__list :global(svg) { color: var(--gold-2); }
+  .price__disc { font-size: .75rem; color: #7f8ea1; margin: 1.1rem 0 0; line-height: 1.55; }
+  .benefits { list-style: none; padding: 0; margin: 1.75rem 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: .85rem 1.5rem; }
+  @media (max-width: 640px) { .benefits { grid-template-columns: 1fr; } }
+  .benefits li { display: flex; gap: .75rem; align-items: flex-start; font-size: .97rem; color: var(--text); }
+  .benefits span { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(214,184,120,.18); color: var(--gold); margin-top: .1rem; }
+</style>

@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { Image } from 'astro:assets';
+import doc from '../assets/dr-khaneki-2607.jpg';
+import { pages } from '../lib/content';
+import { DOCTOR, SITE } from '../data/site';
+import { breadcrumb } from '../lib/schema';
+
+const page = pages['/about/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'About', path: '/about/' }];
+const profile = {
+  '@type': 'ProfilePage',
+  '@id': `${SITE.url}/about/#profile`,
+  url: `${SITE.url}/about/`,
+  name: page.title,
+  mainEntity: { '@id': `${SITE.url}/#physician` },
+};
+---
+<BaseLayout title={page.title} description={page.description} schema={[profile, breadcrumb(crumbs)]}>
+  <PageHero title={page.h1} eyebrow="Our Physician" lede="Knowledgeable Internal Medicine expertise in a gentle and caring manner, with a focus on you and your needs." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container bio">
+      <div class="bio__media reveal">
+        <Image src={doc} alt="Dr. Sina Khaneki, MD, MPH — Internal Medicine physician in Aliso Viejo, CA" width={450} height={600} loading="eager" />
+        <div class="bio__card">
+          <a href={SITE.phoneHref} class="btn btn--gold btn--block"><Icon name="phone" /> {SITE.phone}</a>
+          <button type="button" class="btn btn--ghost btn--block" data-open-appt>Request Appointment</button>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">{DOCTOR.specialty}</p>
+        <h2 class="bio__name">{DOCTOR.name}</h2>
+        <p class="lede">{SITE.about}</p>
+
+        <div class="cv">
+          <section>
+            <h3><Icon name="book" size={20} /> Education</h3>
+            <ul class="tl">
+              {DOCTOR.education.map((e) => <li><strong>{e.school}</strong><span>{e.degree} · {e.years}</span></li>)}
+            </ul>
+          </section>
+          <section>
+            <h3><Icon name="stethoscope" size={20} /> Residency, Fellowship &amp; Postgraduate Training</h3>
+            <ul class="tl">
+              {DOCTOR.training.map((t) => <li><strong>{t.title}</strong><span>{t.org} · {t.years}</span></li>)}
+            </ul>
+          </section>
+          <section>
+            <h3><Icon name="shield" size={20} /> Memberships</h3>
+            <ul class="chips">{DOCTOR.memberships.map((m) => <li>{m}</li>)}</ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">Recognition</p>
+        <h2>Awards and Honors</h2>
+      </div>
+      <div class="grid grid-2 awards">
+        {DOCTOR.awards.map((a) => (
+          <div class="card award reveal"><span class="icon-badge"><Icon name="star" /></span><div><h3>{a.title}</h3><p>{a.detail}</p></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="narrow">
+      <div class="center reveal">
+        <p class="eyebrow">Research</p>
+        <h2>Publications</h2>
+      </div>
+      <ol class="pubs">
+        {DOCTOR.publications.map((p) => (
+          <li class="reveal"><strong>{p.title}</strong><span>{p.authors}</span><em>{p.journal}</em></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="narrow center reveal">
+      <p class="eyebrow">Our Team</p>
+      <h2>Meet Maryam, Office Manager!</h2>
+      <p class="lede">Questions about scheduling, house calls, labs, or referrals? Call our office at <a href={SITE.phoneHref}>{SITE.phone}</a> — we’re happy to help.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bio { display: grid; grid-template-columns: 380px 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  @media (max-width: 900px) { .bio { grid-template-columns: 1fr; } .bio__media { max-width: 420px; } }
+  .bio__media { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  @media (max-width: 900px) { .bio__media { position: static; } }
+  .bio__media :global(img) { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; }
+  .bio__card { display: grid; gap: .6rem; margin-top: 1.25rem; }
+  .bio__name { font-size: clamp(2.2rem, 4vw, 3.2rem); }
+  .cv { display: grid; gap: 2rem; margin-top: 2rem; }
+  .cv h3 { display: flex; align-items: center; gap: .6rem; font-size: 1.5rem; }
+  .cv h3 :global(svg) { color: var(--gold); }
+  .tl { list-style: none; margin: 0; padding: 0 0 0 1.25rem; border-left: 2px solid var(--gold-3); display: grid; gap: 1.1rem; }
+  .tl li { position: relative; }
+  .tl li::before { content: ''; position: absolute; left: calc(-1.25rem - 6px); top: .45rem; width: 10px; height: 10px; border-radius: 50%; background: var(--gold-grad); box-shadow: 0 0 0 4px var(--ivory); }
+  .tl strong { display: block; color: var(--ink); }
+  .tl span { color: var(--muted); font-size: .93rem; }
+  .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chips li { padding: .55rem 1rem; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-weight: 600; font-size: .9rem; color: var(--ink); }
+  .awards { margin-top: 2.5rem; }
+  .award { display: grid; grid-template-columns: 52px 1fr; gap: 1.1rem; }
+  .award .icon-badge { margin: 0; }
+  .award h3 { font-size: 1.3rem; }
+  .award p { margin: 0; color: var(--muted); font-size: .93rem; }
+  .pubs { margin: 2.5rem 0 0; padding: 0; list-style: none; counter-reset: pub; display: grid; gap: 1rem; }
+  .pubs li { counter-increment: pub; position: relative; padding: 1.1rem 1.25rem 1.1rem 3.6rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); display: grid; gap: .2rem; }
+  .pubs li::before { content: counter(pub, decimal-leading-zero); position: absolute; left: 1.15rem; top: 1.05rem; font-family: var(--font-display); font-size: 1.35rem; color: var(--gold); font-weight: 700; }
+  .pubs strong { color: var(--ink); line-height: 1.45; }
+  .pubs span { font-size: .87rem; color: var(--muted); }
+  .pubs em { font-size: .87rem; color: var(--gold); font-weight: 600; }
+</style>

@@ -1,0 +1,32 @@
+---
+// Mid-article conversion block: catches readers at peak intent instead of only at page end.
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+interface Props { topic?: string }
+const { topic } = Astro.props;
+---
+<aside class="icta" aria-label="Schedule a visit">
+  <div class="icta__copy">
+    <p class="icta__kicker"><Icon name="clock" size={14} /> Same-day or next-day appointments</p>
+    <p class="icta__title">Skip the waiting room. <span>We come to you.</span></p>
+    <p class="icta__sub">House call, telemedicine, or in-office in {SITE.address.city} — with a board-certified Internal Medicine physician.</p>
+  </div>
+  <div class="icta__actions">
+    <a href={SITE.phoneHref} class="btn btn--gold"><Icon name="phone" /> {SITE.phone}</a>
+    <button type="button" class="btn btn--ghost" data-open-appt>Book Online</button>
+  </div>
+</aside>
+
+<style>
+  .icta {
+    margin: 2.5rem 0; padding: 1.5rem 1.6rem; border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #fffaf0, #fff); border: 1px solid var(--gold-3);
+    border-left: 4px solid var(--gold); display: grid; gap: 1.1rem; box-shadow: var(--shadow-sm);
+  }
+  @media (min-width: 720px) { .icta { grid-template-columns: 1fr auto; align-items: center; } }
+  .icta__kicker { display: inline-flex; align-items: center; gap: .4rem; margin: 0 0 .35rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 800; color: var(--gold); }
+  .icta__title { margin: 0 0 .3rem; font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--ink); font-weight: 600; }
+  .icta__title span { color: var(--gold); }
+  .icta__sub { margin: 0; font-size: .9rem; color: var(--muted); }
+  .icta__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+</style>

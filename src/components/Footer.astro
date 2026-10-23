@@ -1,0 +1,135 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-clean.png';
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+const year = new Date().getFullYear();
+const quick = [
+  { label: 'About Dr. Khaneki', href: '/about/' },
+  { label: 'Patient Information', href: '/patient-information/' },
+  { label: 'Membership', href: '/membership/' },
+  { label: 'All Services', href: '/services/' },
+  { label: 'Patient Education Blog', href: '/blog/' },
+  { label: 'Reviews', href: '/reviews/' },
+  { label: 'Contact Us', href: '/contact-us/' },
+];
+const featured = [
+  { label: 'Concierge Medicine', href: '/aliso-viejo-ca/concierge-medicine/' },
+  { label: 'House Calls & Primary Care', href: '/aliso-viejo-ca/primary-care/' },
+  { label: 'Telemedicine', href: '/aliso-viejo-ca/telemedicine/' },
+  { label: 'Medical Weight Loss', href: '/aliso-viejo-ca/weight-loss-treatment/' },
+  { label: 'Personal Injury & Auto Accident', href: '/aliso-viejo-ca/personal-injury-auto-accident-care/' },
+  { label: 'Geriatric Medicine', href: '/aliso-viejo-ca/geriatric-medicine/' },
+  { label: 'Cold & Flu Treatment', href: '/aliso-viejo-ca/common-cold-and-flu-treatment/' },
+];
+---
+<section class="cta-band" aria-labelledby="cta-band-title">
+  <div class="container cta-band__inner">
+    <div>
+      <p class="eyebrow">Book Your Appointment Today</p>
+      <h2 id="cta-band-title">Personalized medical care, <span class="gold-text">delivered to your doorstep.</span></h2>
+      <p>House calls, telemedicine and in-office visits with a board-certified Internal Medicine physician — 7 days a week.</p>
+      <ul class="cta-band__trust">
+        <li><Icon name="check" size={15} /> Same-day or next-day appointments</li>
+        <li><Icon name="check" size={15} /> Direct access to your doctor</li>
+        <li><Icon name="check" size={15} /> No crowded waiting rooms</li>
+      </ul>
+    </div>
+    <div class="cta-band__actions">
+      <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone}</a>
+      <button type="button" class="btn btn--light btn--lg" data-open-appt><Icon name="calendar" /> Book a Visit</button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <Image src={logo} alt={SITE.name} width={190} height={102} />
+      <p>{SITE.about}</p>
+      <div class="social">
+        <a href={SITE.social.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={18} /></a>
+        <a href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Instagram"><Icon name="instagram" size={18} /></a>
+        <a href={SITE.social.google} target="_blank" rel="noopener" aria-label="Google Business Profile"><Icon name="google" size={18} /></a>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="footer__h">Explore</h3>
+      <ul class="footer__links">{quick.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+    </div>
+
+    <div>
+      <h3 class="footer__h">Featured Care</h3>
+      <ul class="footer__links">{featured.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+    </div>
+
+    <div>
+      <h3 class="footer__h">Office</h3>
+      <address class="footer__nap">
+        <strong>{SITE.name}</strong>
+        <a href={SITE.directionsUrl} target="_blank" rel="noopener"><Icon name="pin" size={16} /> <span>{SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.postal}</span></a>
+        <a href={SITE.phoneHref}><Icon name="phone" size={16} /> <span>{SITE.phone}</span></a>
+        <span><Icon name="clock" size={16} /> <span>Monday – Sunday<br />{SITE.hours.label}</span></span>
+      </address>
+      <a href={SITE.directionsUrl} target="_blank" rel="noopener" class="btn btn--light btn--sm">Get Directions</a>
+    </div>
+  </div>
+
+  <div class="container footer__areas">
+    <strong>Serving:</strong> {SITE.areas.join(' · ')}
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <span>Copyright © {year} All Rights Reserved {SITE.name}.</span>
+      <nav aria-label="Legal">
+        <a href="/privacy-policy/">Privacy Policy</a>
+        <a href="/sitemap/">Sitemap</a>
+        <a href="/primary-care-physician-terminology/">Medical Terminology</a>
+      </nav>
+    </div>
+    <p class="container footer__disclaimer">Orange County House Calls is not a replacement for emergency care. For serious or life-threatening symptoms, call 911 or go to the nearest emergency room.</p>
+  </div>
+</footer>
+
+<style>
+  .cta-band {
+    background: radial-gradient(800px 300px at 10% 0%, rgba(214,184,120,.25), transparent 60%), linear-gradient(135deg, var(--ink-2), var(--ink));
+    color: #c5cfdb; padding: clamp(3rem, 6vw, 4.5rem) 0; border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .cta-band__inner { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: center; }
+  .cta-band h2 { color: #fff; margin-bottom: .4rem; }
+  .cta-band p:last-child { margin: 0; }
+  .cta-band .eyebrow { color: var(--gold-2); }
+  .cta-band__actions { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: flex-end; }
+  .cta-band__trust { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; list-style: none; padding: 0; margin: 1rem 0 0; font-size: .88rem; color: #dfe6ee; }
+  .cta-band__trust li { display: inline-flex; align-items: center; gap: .35rem; }
+  .cta-band__trust :global(svg) { color: var(--gold-2); }
+  @media (max-width: 860px) { .cta-band__inner { grid-template-columns: 1fr; } .cta-band__actions { justify-content: flex-start; } }
+
+  .footer { background: var(--ink); color: #9fadbd; font-size: .93rem; padding-top: 4rem; }
+  .footer__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.1fr; gap: 2.5rem; }
+  @media (max-width: 960px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .footer__grid { grid-template-columns: 1fr; } }
+  .footer__brand :global(img) { width: 170px; margin-bottom: 1.25rem; }
+  .footer__brand p { font-size: .88rem; line-height: 1.75; }
+  .footer__h { font-family: var(--font-body); font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-2); margin-bottom: 1.1rem; }
+  .footer__links { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+  .footer a { color: #c9d2dd; text-decoration: none; }
+  .footer a:hover { color: var(--gold-2); }
+  .footer__nap { font-style: normal; display: grid; gap: .8rem; margin-bottom: 1.25rem; }
+  .footer__nap strong { color: #fff; }
+  .footer__nap a, .footer__nap > span { display: flex; gap: .6rem; align-items: flex-start; }
+  .footer__nap :global(svg) { color: var(--gold-2); margin-top: .25rem; flex: none; }
+  .social { display: flex; gap: .5rem; }
+  .social a { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.15); transition: border-color .2s, background .2s; }
+  .social a:hover { border-color: var(--gold-2); background: rgba(214,184,120,.1); }
+  .footer__areas { margin-top: 3rem; padding: 1.5rem 0; border-top: 1px solid rgba(255,255,255,.08); font-size: .85rem; line-height: 1.9; }
+  .footer__areas strong { color: var(--gold-2); margin-right: .35rem; }
+  .footer__bottom { background: #0a1520; padding: 1.25rem 0 6rem; font-size: .82rem; }
+  @media (min-width: 761px) { .footer__bottom { padding-bottom: 1.25rem; } }
+  .footer__bottom-inner { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+  .footer__bottom nav { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+  .footer__disclaimer { margin: .75rem auto 0; color: #6f7f92; font-size: .78rem; }
+</style>

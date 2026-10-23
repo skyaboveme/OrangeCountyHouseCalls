@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { pages, serviceBySlug } from '../lib/content';
+import { SERVICE_GROUPS, SITE } from '../data/site';
+import { breadcrumb, medicalWebPage } from '../lib/schema';
+
+const page = pages['/services/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }];
+// Keep the original long-form descriptive copy (everything after the link lists)
+const idx = page.html.indexOf('<h4>Orange County House Calls Urgent Care Services Offered');
+const body = (idx >= 0 ? page.html.slice(idx) : '').replace(/<h4>/g, '<h2>').replace(/<\/h4>/g, '</h2>');
+const icons = ['stethoscope', 'activity', 'heart', 'bandage', 'leaf', 'book'];
+const groups = SERVICE_GROUPS.map((g) => ({
+  ...g,
+  items: g.items.map((slug) => serviceBySlug(slug)).filter((s): s is NonNullable<typeof s> => Boolean(s)),
+}));
+const catalog = {
+  '@type': 'OfferCatalog',
+  name: 'Primary Care Physician Services — Aliso Viejo, CA',
+  itemListElement: groups.map((g) => ({
+    '@type': 'OfferCatalog',
+    name: g.title,
+    itemListElement: g.items.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'MedicalProcedure', name: s.name, url: `${SITE.url}${s.path}` } })),
+  })),
+};
+---
+<BaseLayout title={page.title} description={page.description} schema={[medicalWebPage({ path: '/services/', title: page.title, description: page.description }), catalog, breadcrumb(crumbs)]}>
+  <PageHero title={page.h1} eyebrow="Our Services" lede="Our experience allows us to offer a wide range of comprehensive healthcare services — delivered through house calls, telemedicine, and in-office visits." crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container">
+      <div class="groups">
+        {groups.map((g, i) => (
+          <section class="group card reveal" aria-labelledby={`g-${i}`}>
+            <header class="group__head">
+              <span class="icon-badge"><Icon name={icons[i] ?? 'check'} /></span>
+              <h2 id={`g-${i}`}><a href={g.href}>{g.title}</a></h2>
+            </header>
+            <ul class="group__list">
+              {g.items.map((s) => <li><a href={s.path}>{s.name} <Icon name="arrow" size={14} /></a></li>)}
+            </ul>
+          </section>
+        ))}
+        <section class="group card group--ink reveal" aria-labelledby="g-find">
+          <h2 id="g-find">Still Can’t Find?</h2>
+          <p>Call our team — we treat most health conditions and refer to specialists when necessary.</p>
+          <a href={SITE.phoneHref} class="btn btn--gold btn--block"><Icon name="phone" /> {SITE.phone}</a>
+          <a href="/sitemap/" class="btn btn--light btn--block">Search our Sitemap</a>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  {body && (
+    <section class="section section--sand">
+      <div class="narrow prose reveal" set:html={body} />
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 1.5rem; align-items: start; }
+  .group__head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .group__head .icon-badge { margin: 0; }
+  .group h2 { font-size: 1.7rem; margin: 0; }
+  .group h2 a { color: var(--ink); text-decoration: none; }
+  .group h2 a:hover { color: var(--gold); }
+  .group__list { list-style: none; margin: 0; padding: 0; }
+  .group__list a { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .6rem 0; border-bottom: 1px dashed var(--line); font-size: .95rem; font-weight: 600; color: var(--text); text-decoration: none; }
+  .group__list li:last-child a { border: 0; }
+  .group__list a:hover { color: var(--gold); }
+  .group__list :global(svg) { opacity: .4; transition: transform .2s, opacity .2s; }
+  .group__list a:hover :global(svg) { opacity: 1; transform: translateX(3px); }
+  .group--ink { background: linear-gradient(160deg, var(--ink), var(--ink-3)); color: #b9c4d1; border: 0; display: grid; gap: .8rem; }
+  .group--ink h2 { color: #fff; }
+</style>

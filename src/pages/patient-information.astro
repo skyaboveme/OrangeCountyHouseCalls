@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Icon from '../components/Icon.astro';
+import { pages } from '../lib/content';
+import { SITE } from '../data/site';
+import { breadcrumb, medicalWebPage } from '../lib/schema';
+
+const page = pages['/patient-information/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Patient Information', path: '/patient-information/' }];
+const steps = [
+  { icon: 'calendar', title: 'Making an Appointment', text: `We strongly recommend making an appointment for non-emergency visits as that will greatly reduce your wait time and give you more time with your doctor. Making an appointment is simple. Call ${SITE.phone} and one of our friendly team members will gladly assist you with booking an appointment or answering any questions you may have. We ask that you call our office 24 hours in advance if you cannot keep an appointment. We will attempt to reschedule an appointment as close to the initial date as possible.` },
+  { icon: 'user', title: 'What to Expect', text: 'Upon arriving at Orange County House Calls, you will be greeted by a friendly team member who will assist you in checking in for your first visit. They will provide you with the new patient paperwork and health questionnaire. We will also need to collect your insurance information, a copy of your ID, and contact information. On subsequent visits, you need only check in at the front desk and wait to be called to the examination room. Each appointment differs, and Dr. Khaneki will inform you of what to expect prior to your appointment, except in emergency cases.' },
+  { icon: 'stethoscope', title: 'Initial Examination', text: 'In most cases, an initial examination takes about an hour. Our experienced team at Orange County House Calls will ask you questions, get to know your health habits and practices, and listen to your health concerns. We will also check your vitals and ensure everything looks and sounds right. We believe in educating patients and empowering them to make good choices to improve their overall health. Dr. Khaneki will conduct a physical examination, address any symptoms you are currently experiencing, and make recommendations for necessary treatments.' },
+  { icon: 'heart', title: 'Pain Concerns', text: "Our patients' comfort and trust are of the utmost importance to us. We strive to provide as much pain relief as possible while also combatting the root causes of your pain. If you are undergoing a treatment or procedure, Dr. Khaneki will meet with you to discuss your pain tolerance and create a plan for pain management. Working together, we will treat your health concerns in a way that minimizes pain and enables you to get back on your feet." },
+];
+---
+<BaseLayout title={page.title} description={page.description} schema={[medicalWebPage({ path: '/patient-information/', title: page.title, description: page.description }), breadcrumb(crumbs)]}>
+  <PageHero title={page.h1} eyebrow="New & Returning Patients" lede="Here, you will find information on what to expect during your visit." crumbs={crumbs} />
+
+  <div class="container layout">
+    <article class="layout__main">
+      <div class="prose">
+        <p>At Orange County House Calls, we dedicate ourselves to providing patients with quick and easy access to quality healthcare. When you require primary care, our team can treat you as soon as possible. We take a hands-on approach to treatment and support you through every step of the visit. Primary care visits can be stressful, so each team member provides compassionate and skilled care to help patients feel safe and comfortable throughout their treatment process. Here, you will find information on what to expect during your visit.</p>
+        <p>We are happy to hear from you, answer your questions, and schedule an appointment. Call Orange County House Calls at <a href={SITE.phoneHref}>{SITE.phone}</a> or stop by our office.</p>
+
+        <h2 id="new-patients">New Patients</h2>
+        <p>Orange County House Calls welcomes new patients and the opportunity to discuss any health concerns they may have. When you visit us for the first time, we will help guide you through the process to make your experience as stress-free as possible. It is easy for new patients to start their journey towards medical care with our team. As a new patient, we will ask you to complete some initial forms, so we can better understand and treat your medical issues. New patients will also need to bring their ID and insurance card. We look forward to serving you and restoring you to your full health.</p>
+      </div>
+
+      <div class="pay">
+        <span class="icon-badge"><Icon name="shield" /></span>
+        <div><strong>Payment Methods</strong><span>Check or Cash Accepted</span></div>
+      </div>
+
+      <div class="steps">
+        {steps.map((s, i) => (
+          <section class="step reveal">
+            <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h2 class="step__t"><Icon name={s.icon} size={20} /> {s.title}</h2>
+              <p>{s.text}</p>
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <div class="prose">
+        <h2 id="concierge">Personalized Concierge Medical Services</h2>
+        <p>Our concierge medical services are designed to provide personalized, high-quality care tailored to your specific needs. With a focus on convenience and accessibility, we offer services such as same-day appointments, comprehensive health assessments, and direct access to your physician. Whether you are managing a chronic condition or seeking preventive care, our team is here to ensure you receive exceptional medical attention when you need it most. To learn more or schedule an initial consultation, please contact our office at <a href={SITE.phoneHref}>{SITE.phone}</a>. For detailed information about our pricing, please follow this link: <a href="/membership/">Membership</a>.</p>
+
+        <h2 id="financial-policy">Financial Policy</h2>
+        <p>Orange County House Calls is dedicated to providing high-quality medical care to families throughout the Aliso Viejo area. We understand that all patients are different in the way they handle their finances. We will work with you to find a solution that enables you to get the medical care you need, with or without insurance. Call <a href={SITE.phoneHref}>{SITE.phone}</a> to ask about our different payment options, which may include cash, check, financing, and credit cards. We provide budget-friendly medical care that provides a solution to all of your general health needs.</p>
+      </div>
+    </article>
+    <Sidebar
+      toc={[
+        { text: 'New Patients', id: 'new-patients' },
+        { text: 'Concierge Services', id: 'concierge' },
+        { text: 'Financial Policy', id: 'financial-policy' },
+      ]}
+      related={[
+        { href: '/membership/', title: 'Membership & Pricing' },
+        { href: '/aliso-viejo-ca/concierge-medicine/', title: 'Concierge Medicine' },
+        { href: '/aliso-viejo-ca/telemedicine/', title: 'Telemedicine' },
+        { href: '/blog/what-to-expect-during-your-first-primary-care-visit/', title: 'Your First Primary Care Visit' },
+      ]}
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(2rem, 4vw, 4rem); padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(4rem, 8vw, 6rem); }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+  .layout__main { min-width: 0; }
+  .pay { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; margin: 1rem 0 2.5rem; border-radius: var(--radius-lg); background: var(--sand); border: 1px solid var(--line); }
+  .pay .icon-badge { margin: 0; }
+  .pay strong { display: block; color: var(--ink); font-family: var(--font-display); font-size: 1.4rem; }
+  .pay span { color: var(--muted); }
+  .steps { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
+  .step { display: grid; grid-template-columns: 64px 1fr; gap: 1rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .step__n { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; color: var(--gold); font-weight: 700; }
+  .step__t { display: flex; align-items: center; gap: .5rem; font-size: 1.5rem; }
+  .step__t :global(svg) { color: var(--gold); }
+  .step p { margin: 0; color: var(--muted); }
+  @media (max-width: 560px) { .step { grid-template-columns: 1fr; } }
+</style>

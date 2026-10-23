@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+---
+<div class="callbar" role="region" aria-label="Quick contact">
+  <a href={SITE.phoneHref} class="callbar__btn callbar__btn--call"><Icon name="phone" size={18} /> Call Now</a>
+  <button type="button" class="callbar__btn" data-open-appt><Icon name="calendar" size={18} /> Book</button>
+  <a href={SITE.directionsUrl} target="_blank" rel="noopener" class="callbar__btn"><Icon name="pin" size={18} /> Directions</a>
+</div>
+<style>
+  .callbar {
+    position: fixed; left: .75rem; right: .75rem; bottom: .75rem; z-index: 40; display: none;
+    grid-template-columns: 1.3fr 1fr 1fr; gap: .4rem; padding: .4rem; border-radius: 18px;
+    background: rgba(14, 27, 42, .92); backdrop-filter: blur(12px); box-shadow: var(--shadow-lg);
+    padding-bottom: calc(.4rem + env(safe-area-inset-bottom, 0px));
+  }
+  @media (max-width: 760px) { .callbar { display: grid; } }
+  .callbar__btn {
+    display: flex; align-items: center; justify-content: center; gap: .4rem; padding: .8rem .5rem; border-radius: 14px;
+    font: 700 .85rem/1 var(--font-body); color: #fff; text-decoration: none; background: rgba(255,255,255,.06); border: 0; cursor: pointer;
+  }
+  .callbar__btn--call { background: var(--gold-grad); color: var(--ink); }
+</style>

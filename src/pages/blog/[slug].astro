@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import Icon from '../../components/Icon.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
+import { posts, formatDate, readingTime, splitForCta, type Post } from '../../lib/content';
+import { article, breadcrumb } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return posts.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { post: p, prev: posts[i + 1] ?? null, next: posts[i - 1] ?? null },
+  }));
+}
+const { post, prev, next } = Astro.props as { post: Post; prev: Post | null; next: Post | null };
+const { path, title, description, h1, html, published, modified } = post;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Blog', path: '/blog/' },
+  { name: h1, path },
+];
+const more = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+const [htmlA, htmlB] = splitForCta(html, 2);
+---
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  published={published}
+  modified={modified}
+  schema={[article({ path, title: h1, description, published, modified }), breadcrumb(crumbs)]}
+>
+  <PageHero title={h1} eyebrow="Patient Education" crumbs={crumbs}>
+    <p class="meta">
+      <span><Icon name="calendar" size={15} /> <time datetime={published ?? undefined}>{formatDate(published)}</time></span>
+      <span><Icon name="book" size={15} /> {readingTime(html)} min read</span>
+      <span><Icon name="user" size={15} /> Reviewed by Sina Khaneki, MD, MPH</span>
+    </p>
+  </PageHero>
+
+  <div class="container layout">
+    <article class="layout__main">
+      <div class="prose" set:html={htmlA} />
+      {htmlB && <InlineCTA />}
+      {htmlB && <div class="prose" set:html={htmlB} />}
+      {!htmlB && <InlineCTA />}
+      <nav class="pager" aria-label="More posts">
+        {prev ? <a href={prev.path} class="pager__link"><small>← Previous Post</small><span>{prev.h1}</span></a> : <span />}
+        {next && <a href={next.path} class="pager__link pager__link--next"><small>Next Post →</small><span>{next.h1}</span></a>}
+      </nav>
+    </article>
+    <Sidebar related={more.map((m) => ({ href: m.path, title: m.h1 }))} />
+  </div>
+</BaseLayout>
+
+<style>
+  .meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: 1.25rem 0 0; font-size: .88rem; color: #b9c4d1; }
+  .meta span { display: inline-flex; gap: .4rem; align-items: center; }
+  .meta :global(svg) { color: var(--gold-2); }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(2rem, 4vw, 4rem); padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(4rem, 8vw, 6rem); }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+  .layout__main { min-width: 0; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  @media (max-width: 600px) { .pager { grid-template-columns: 1fr; } }
+  .pager__link { display: block; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-decoration: none; transition: border-color .2s, transform .2s; }
+  .pager__link:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .pager__link small { display: block; color: var(--gold); font-weight: 700; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
+  .pager__link span { font-family: var(--font-display); font-size: 1.2rem; color: var(--ink); font-weight: 600; }
+  .pager__link--next { text-align: right; }
+</style>

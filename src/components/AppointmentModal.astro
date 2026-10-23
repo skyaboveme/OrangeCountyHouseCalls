@@ -1,0 +1,91 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+// Appointment request form — mirrors the fields on the original site.
+// Submits via FormSubmit.co when SITE.formEmail is set; otherwise falls back to a click-to-call prompt.
+const action = SITE.formEmail ? `https://formsubmit.co/${SITE.formEmail}` : '';
+---
+<dialog class="appt" id="appt-modal" aria-labelledby="appt-title">
+  <form method="dialog" class="appt__close-form"><button class="appt__close" aria-label="Close"><Icon name="x" /></button></form>
+  <div class="appt__head">
+    <p class="eyebrow">Orange County House Calls</p>
+    <h2 id="appt-title">Request an Appointment</h2>
+    <p>Prefer to talk? Call <a href={SITE.phoneHref}><strong>{SITE.phone}</strong></a> — open 7 days, {SITE.hours.label}.</p>
+  </div>
+  <form class="appt__form" id="appt-form" action={action} method="POST" data-has-endpoint={action ? 'true' : 'false'}>
+    <input type="hidden" name="_subject" value="New appointment request — orangecountyhousecalls.com" />
+    <input type="hidden" name="_template" value="table" />
+    <input type="hidden" name="_next" value={`${SITE.url}/contact-us/?sent=1`} />
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+    <div class="field">
+      <label for="appt-name">First &amp; Last Name (Required)</label>
+      <input id="appt-name" name="name" required autocomplete="name" />
+    </div>
+    <div class="appt__row">
+      <div class="field">
+        <label for="appt-email">Email (Required)</label>
+        <input id="appt-email" name="email" type="email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="appt-phone">Phone Number (Required)</label>
+        <input id="appt-phone" name="phone" type="tel" required autocomplete="tel" />
+      </div>
+    </div>
+    <div class="field">
+      <label for="appt-source">How Did You Hear About Us?</label>
+      <select id="appt-source" name="source">
+        <option value="">Select an Option</option>
+        <option>Existing Customer</option>
+        <option>Google</option>
+        <option>Discovered Online</option>
+        <option>Word of Mouth</option>
+        <option>Facebook or Other Social Media</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="appt-msg">How can we help? (Optional)</label>
+      <textarea id="appt-msg" name="message" rows="3" placeholder="Please do not include sensitive medical details."></textarea>
+    </div>
+    <button type="submit" class="btn btn--gold btn--block">Send Request <Icon name="arrow" /></button>
+    <p class="appt__note">For emergencies, call 911. Submitting this form does not establish a patient relationship.</p>
+  </form>
+</dialog>
+
+<style>
+  .appt {
+    width: min(560px, calc(100% - 1.5rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; border: 0; padding: 0;
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); background: var(--ivory); color: var(--text);
+  }
+  .appt::backdrop { background: rgba(14, 27, 42, .6); backdrop-filter: blur(4px); }
+  .appt[open] { animation: pop .35s var(--ease); }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+  .appt__head { padding: 2rem 2rem 1rem; background: linear-gradient(160deg, var(--ink), var(--ink-3)); color: #c9d3de; }
+  .appt__head h2 { color: #fff; font-size: 2rem; margin-bottom: .4rem; }
+  .appt__head a { color: var(--gold-2); }
+  .appt__head p:last-child { margin: 0; font-size: .92rem; }
+  .appt__head .eyebrow { color: var(--gold-2); }
+  .appt__form { padding: 1.5rem 2rem 2rem; }
+  .appt__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+  @media (max-width: 520px) { .appt__row { grid-template-columns: 1fr; } .appt__head, .appt__form { padding-inline: 1.25rem; } }
+  .appt__note { font-size: .78rem; color: var(--muted); margin: .9rem 0 0; text-align: center; }
+  .appt__close-form { position: absolute; right: .75rem; top: .75rem; margin: 0; z-index: 2; }
+  .appt__close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff; cursor: pointer; display: grid; place-items: center; }
+</style>
+
+<script>
+  const modal = document.getElementById('appt-modal') as HTMLDialogElement | null;
+  document.querySelectorAll('[data-open-appt]').forEach((btn) =>
+    btn.addEventListener('click', (e) => { e.preventDefault(); modal?.showModal(); })
+  );
+  modal?.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+  const form = document.getElementById('appt-form') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    if (form.dataset.hasEndpoint !== 'true') {
+      e.preventDefault();
+      if (confirm('Online requests are being set up. Would you like to call us now at (949) 204-1334?')) {
+        window.location.href = 'tel:+19492041334';
+      }
+    }
+  });
+</script>

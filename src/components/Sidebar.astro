@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import doc from '../assets/dr-khaneki-2607.jpg';
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+import { REVIEWS } from '../data/reviews';
+const quote = REVIEWS.find((r) => r.name === 'Elijah Richardson');
+interface Props { related?: { href: string; title: string }[]; toc?: { text: string; id: string }[] }
+const { related = [], toc = [] } = Astro.props;
+---
+<aside class="side">
+  <div class="side__card side__card--ink">
+    <div class="side__doc">
+      <Image src={doc} alt="Dr. Sina Khaneki, MD, MPH" width={72} height={96} />
+      <div>
+        <strong>Dr. Sina Khaneki, MD, MPH</strong>
+        <span>Board-certified Internal Medicine</span>
+      </div>
+    </div>
+    <p class="side__avail"><span class="dot" aria-hidden="true"></span> Same-day or next-day appointments</p>
+    <p>House calls, telemedicine &amp; in-office visits — open 7 days, {SITE.hours.label}.</p>
+    <a href={SITE.phoneHref} class="btn btn--gold btn--block"><Icon name="phone" /> Call {SITE.phone}</a>
+    <button type="button" class="btn btn--light btn--block" data-open-appt><Icon name="calendar" /> Book a Visit</button>
+  </div>
+
+  {quote && (
+    <figure class="side__card side__quote">
+      <span class="side__stars" aria-hidden="true">{[1,2,3,4,5].map(() => <Icon name="star" size={14} />)}</span>
+      <blockquote>“{quote.text}”</blockquote>
+      <figcaption>— {quote.name} · <a href="/reviews/">More reviews</a></figcaption>
+    </figure>
+  )}
+
+  {toc.length > 2 && (
+    <nav class="side__card" aria-label="On this page">
+      <h2 class="side__h">On this page</h2>
+      <ol class="side__toc">{toc.map((t) => <li><a href={`#${t.id}`}>{t.text}</a></li>)}</ol>
+    </nav>
+  )}
+
+  {related.length > 0 && (
+    <div class="side__card">
+      <h2 class="side__h">Related care</h2>
+      <ul class="side__links">{related.map((r) => <li><a href={r.href}>{r.title} <Icon name="arrow" size={14} /></a></li>)}</ul>
+    </div>
+  )}
+
+  <div class="side__card">
+    <h2 class="side__h">Visit our office</h2>
+    <p class="side__addr"><Icon name="pin" size={16} /> {SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.postal}</p>
+    <a href={SITE.directionsUrl} target="_blank" rel="noopener" class="side__dir">Get directions <Icon name="arrow" size={14} /></a>
+  </div>
+</aside>
+
+<style>
+  .side { display: grid; gap: 1.25rem; align-content: start; position: sticky; top: calc(var(--header-h) + 1.25rem); }
+  @media (max-width: 1000px) { .side { position: static; } }
+  .side__card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .side__card--ink { background: linear-gradient(160deg, var(--ink), var(--ink-3)); color: #b9c4d1; border: 0; display: grid; gap: .7rem; }
+  .side__card--ink p { font-size: .9rem; margin: 0 0 .3rem; }
+  .side__doc { display: flex; gap: .9rem; align-items: center; }
+  .side__doc :global(img) { width: 56px; height: 56px; object-fit: cover; object-position: top; border-radius: 50%; border: 2px solid var(--gold-2); }
+  .side__doc strong { color: #fff; display: block; font-size: .98rem; }
+  .side__doc span { font-size: .8rem; color: var(--gold-2); }
+  .side__h { font-family: var(--font-body); font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: .9rem; }
+  .side__toc { margin: 0; padding-left: 1.1rem; display: grid; gap: .45rem; font-size: .9rem; }
+  .side__toc a { color: var(--text); text-decoration: none; }
+  .side__toc a:hover { color: var(--gold); }
+  .side__links { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; }
+  .side__links a { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .55rem 0; border-bottom: 1px dashed var(--line); font-size: .92rem; font-weight: 600; color: var(--ink); text-decoration: none; }
+  .side__links li:last-child a { border: 0; }
+  .side__links a:hover { color: var(--gold); }
+  .side__addr { display: flex; gap: .5rem; font-size: .92rem; margin-bottom: .6rem; }
+  .side__addr :global(svg) { color: var(--gold); margin-top: .3rem; flex: none; }
+  .side__dir { font-weight: 700; font-size: .9rem; display: inline-flex; gap: .35rem; align-items: center; text-decoration: none; }
+  .side__avail { display: flex; align-items: center; gap: .5rem; font-size: .8rem !important; font-weight: 700; color: #e6ebf1; margin: .2rem 0 0 !important; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #4cc38a; box-shadow: 0 0 0 0 rgba(76,195,138,.6); animation: pulse 2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(76,195,138,0); } 100% { box-shadow: 0 0 0 0 rgba(76,195,138,0); } }
+  .side__quote { margin: 0; }
+  .side__stars { display: inline-flex; gap: 2px; color: var(--gold); margin-bottom: .5rem; }
+  .side__quote blockquote { margin: 0 0 .6rem; font-family: var(--font-display); font-style: italic; font-size: 1.1rem; line-height: 1.45; color: var(--ink); }
+  .side__quote figcaption { font-size: .82rem; color: var(--muted); font-weight: 600; }
+</style>

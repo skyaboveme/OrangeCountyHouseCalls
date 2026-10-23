@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { glossary, slugify } from '../lib/content';
+import { pages } from '../lib/content';
+import { breadcrumb, definedTerms } from '../lib/schema';
+
+const page = pages['/primary-care-physician-terminology/'];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Medical Terminology', path: '/primary-care-physician-terminology/' }];
+const letters = [...new Set(glossary.map((g) => g.term[0].toUpperCase()))].filter((l) => /[A-Z]/.test(l)).sort();
+const byLetter = letters.map((l) => ({ l, items: glossary.filter((g) => g.term[0].toUpperCase() === l) }));
+---
+<BaseLayout title={page.title} description={page.description}
+  schema={[breadcrumb(crumbs), definedTerms('Glossary of Primary Care Physician Terms', '/primary-care-physician-terminology/', glossary)]}>
+  <PageHero title="Primary Care Physician Terminology" eyebrow="Glossary" crumbs={crumbs}
+    lede="Primary Care Physician terminology demystified. Learn the meaning of terms and procedures you hear about in the primary care physician office." />
+
+  <nav class="az" aria-label="Jump to letter">
+    <div class="container az__inner">{letters.map((l) => <a href={`#letter-${l}`}>{l}</a>)}</div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      {byLetter.map(({ l, items }) => (
+        <section class="letter" id={`letter-${l}`} aria-labelledby={`h-${l}`}>
+          <h2 id={`h-${l}`} class="letter__h">{l}</h2>
+          <dl class="terms">
+            {items.map((g) => (
+              <div class="term" id={slugify(g.term)}><dt><dfn>{g.term}</dfn></dt><dd>{g.def}</dd></div>
+            ))}
+          </dl>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .az { position: sticky; top: var(--header-h); z-index: 20; background: rgba(251,248,242,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .az__inner { display: flex; flex-wrap: wrap; gap: .25rem; padding: .6rem 0; }
+  .az a { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px; font-weight: 700; font-size: .88rem; text-decoration: none; color: var(--ink); }
+  .az a:hover { background: var(--gold-grad); }
+  .letter { display: grid; grid-template-columns: 90px 1fr; gap: 1.5rem; padding: 2rem 0; border-bottom: 1px solid var(--line); scroll-margin-top: calc(var(--header-h) + 70px); }
+  @media (max-width: 640px) { .letter { grid-template-columns: 1fr; } }
+  .letter__h { font-size: 4rem; line-height: 1; margin: 0; }
+  .terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1rem; margin: 0; }
+  .term { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .term dt { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
+  .term dfn { font-style: normal; }
+  .term dd { margin: 0; color: var(--muted); font-size: .93rem; line-height: 1.6; }
+</style>
