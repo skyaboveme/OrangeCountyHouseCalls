@@ -17,7 +17,7 @@ export const SITE = {
     country: 'US',
   },
   geo: { lat: 33.5732824, lng: -117.7037369 },
-  hours: { days: 'Monday – Sunday', open: '06:00', close: '20:00', label: '6:00 AM – 8:00 PM' },
+  hours: { days: 'Monday – Sunday', open: '08:30', close: '17:00', label: '8:30 AM – 5:00 PM', table: '8:30AM to 5:00PM' },
   gtm: 'GTM-N7FG9CGL',
   mapsUrl: 'https://maps.app.goo.gl/2jhihvPmQJtZbQAq9',
   directionsUrl: 'https://maps.app.goo.gl/t4RoS2g1qwCvFcqr8',
