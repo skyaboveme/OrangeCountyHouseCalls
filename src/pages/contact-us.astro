@@ -33,7 +33,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(`Orange Count
         <a class="ci" href={SITE.directionsUrl} target="_blank" rel="noopener"><span class="icon-badge"><Icon name="pin" /></span><span><small>Visit</small><strong>{SITE.address.street}<br />{SITE.address.city}, {SITE.address.region} {SITE.address.postal}</strong></span></a>
         <div class="ci"><span class="icon-badge"><Icon name="clock" /></span>
           <span><small>Hours</small>
-            <table class="hours"><tbody>{days.map((d) => <tr><th scope="row">{d}:</th><td>{SITE.hours.table}</td></tr>)}</tbody></table>
+            <table class="hours"><tbody>{days.map((d) => <tr><th scope="row">{d}:</th><td>6:00AM to 8:00PM</td></tr>)}</tbody></table>
           </span>
         </div>
         <button type="button" class="btn btn--gold btn--block" data-open-appt><Icon name="calendar" /> Request Appointment</button>
