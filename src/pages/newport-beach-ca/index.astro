@@ -1,0 +1,1243 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import ReviewCard from '../../components/ReviewCard.astro';
+import FAQList from '../../components/FAQList.astro';
+import { Image } from 'astro:assets';
+import hero from '../../assets/s1-new-2.jpg';
+import consult from '../../assets/s1.jpg';
+import doc from '../../assets/dr-khaneki-2607.jpg';
+import { SITE, DOCTOR, MEMBERSHIP } from '../../data/site';
+import { REVIEWS } from '../../data/reviews';
+import { breadcrumb, faqPage, medicalWebPage, serviceSchema } from '../../lib/schema';
+
+const path = '/newport-beach-ca/';
+const title = `House Call Doctor in Newport Beach, CA | Same-Day In-Home Physician | ${SITE.phone}`;
+const description = `Need a house call doctor in Newport Beach, CA? Board-certified Internal Medicine physician Dr. Sina Khaneki, MD, MPH brings private, unrushed medical care directly to your Newport Beach home, hotel, or office — 7 days a week. Call ${SITE.phone}.`;
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Newport Beach House Calls', path },
+];
+
+const action = SITE.formEmail ? `https://formsubmit.co/${SITE.formEmail}` : '';
+
+const neighborhoods = [
+  'Corona del Mar',
+  'Newport Coast',
+  'Balboa Island',
+  'Balboa Peninsula',
+  'Lido Isle',
+  'Pelican Hill',
+  'Harbor Ridge',
+  'Dover Shores',
+  'Eastbluff',
+  'Newport Heights',
+  'Fashion Island Area',
+  'Crystal Cove',
+];
+
+const credentials = [
+  { icon: 'shield', big: 'Board-Certified', small: 'Internal Medicine (MD, MPH)' },
+  { icon: 'clock', big: 'Same-Day / Next-Day', small: 'Open 7 Days · 6 AM – 8 PM' },
+  { icon: 'home', big: 'At Your Doorstep', small: 'Home, Hotel, Office or Senior Living' },
+  { icon: 'star', big: '5.0 ★ Rated', small: 'Trusted Across Coastal Orange County' },
+];
+
+const careCategories = [
+  {
+    icon: 'activity',
+    title: 'Urgent & Sick House Calls',
+    text: 'Skip the crowded Newport Beach urgent care waiting room. Get thorough in-home evaluation and rapid relief when you or a loved one feel unwell.',
+    items: [
+      { label: 'Cold, Flu & Respiratory Illness', href: '/aliso-viejo-ca/common-cold-and-flu-treatment/' },
+      { label: 'Sinus, Ear & Strep Throat Infections', href: '/aliso-viejo-ca/sinus-infection-treatment/' },
+      { label: 'Fever, Dehydration & Food Poisoning', href: '/aliso-viejo-ca/food-poisoning-treatment/' },
+      { label: 'UTI, Migraines & Acute Pain', href: '/aliso-viejo-ca/urinary-tract-infection/' },
+    ],
+  },
+  {
+    icon: 'heart',
+    title: 'Senior & Geriatric House Calls',
+    text: 'Compassionate, unhurried medical visits for older adults at home or in Newport Beach senior living communities — giving families complete peace of mind.',
+    items: [
+      { label: 'Comprehensive Geriatric Care', href: '/aliso-viejo-ca/geriatric-medicine/' },
+      { label: 'Post-Hospital & Fall Evaluations', href: '/aliso-viejo-ca/when-an-older-person-falls/' },
+      { label: 'Chronic Disease & Medication Review', href: '/aliso-viejo-ca/chronic-disease-management/' },
+      { label: 'Mobility-Friendly In-Home Exams', href: '/aliso-viejo-ca/physical-exams/' },
+    ],
+  },
+  {
+    icon: 'stethoscope',
+    title: 'Concierge Primary Care & Wellness',
+    text: 'Ongoing private physician access, executive-level preventive care, and medically supervised weight loss tailored to your lifestyle.',
+    items: [
+      { label: 'Premier Concierge Medicine', href: '/aliso-viejo-ca/concierge-medicine/' },
+      { label: 'Physician-Guided Weight Loss', href: '/aliso-viejo-ca/weight-loss-treatment/' },
+      { label: 'Preventive & Longevity Care', href: '/aliso-viejo-ca/preventive-medicine/' },
+      { label: 'Minor Injuries & Auto Accidents', href: '/aliso-viejo-ca/personal-injury-auto-accident-care/' },
+    ],
+  },
+];
+
+const steps = [
+  {
+    n: '01',
+    title: 'Call or Request Online',
+    text: `Call us directly at ${SITE.phone} or submit the quick form on this page. We confirm your symptoms, Newport Beach location, and preferred arrival window.`,
+  },
+  {
+    n: '02',
+    title: 'Dr. Khaneki Arrives at Your Door',
+    text: 'A board-certified Internal Medicine physician — never a rotating gig-economy provider — arrives at your home, coastal residence, hotel, or office.',
+  },
+  {
+    n: '03',
+    title: 'Unrushed Exam, Treatment & Follow-Up',
+    text: 'Receive a thorough evaluation, personalized treatment plan, prescriptions sent straight to your preferred Newport Beach pharmacy, and direct follow-up access.',
+  },
+];
+
+const compare = [
+  ['Driving down PCH or MacArthur while sick', 'Stay resting in your own Newport Beach bed'],
+  ['60–90+ minute urgent care wait times', 'Same-day or next-day scheduled arrival'],
+  ['7-minute rushed visit with a mid-level provider', 'Extended, unhurried visit with an MD, MPH Internist'],
+  ['Exposure to contagious waiting rooms', '100% private, discreet care at your residence'],
+  ['Hard to reach anyone for follow-up questions', 'Direct phone access to Dr. Khaneki'],
+];
+
+const reviews = REVIEWS.filter((r) => r.source === 'Google').slice(0, 3);
+const featuredStory = REVIEWS.find((r) => r.name === 'Omid H');
+
+const nbFaqs = [
+  {
+    q: 'How quickly can a house call doctor arrive in Newport Beach?',
+    a: `We offer same-day and next-day house call appointments throughout Newport Beach 7 days a week from ${SITE.hours.label}. For the fastest dispatch, call us directly at <a href="${SITE.phoneHref}">${SITE.phone}</a>.`,
+  },
+  {
+    q: 'Do I need a monthly membership to book a single house call in Newport Beach?',
+    a: 'No. You can book a one-time Newport Beach house call for a flat <strong>$500/visit</strong> with no membership required. If you want ongoing direct physician access, house calls, telemedicine, and in-office care year-round, our Premier Concierge Membership is $500/month (with a 1-year membership).',
+  },
+  {
+    q: 'Which Newport Beach neighborhoods, hotels, and communities do you serve?',
+    a: 'Dr. Khaneki travels to homes, estates, offices, yachts/marinas, senior living communities, and resorts across all of Newport Beach — including Corona del Mar, Newport Coast, Pelican Hill, Balboa Island, Balboa Peninsula, Lido Isle, Dover Shores, Harbor Ridge, Eastbluff, Newport Heights, and Crystal Cove.',
+  },
+  {
+    q: 'Will I see an actual board-certified MD during my house call?',
+    a: 'Yes. Every house call is personally performed by <strong>Dr. Sina Khaneki, MD, MPH</strong>, a board-certified Internal Medicine physician and former Ambulatory Clinic Chief Resident — never an outsourced urgent care contractor.',
+  },
+  {
+    q: 'Can Dr. Khaneki send prescriptions to my Newport Beach pharmacy?',
+    a: 'Yes. If medication is medically appropriate, Dr. Khaneki electronically sends prescriptions immediately to your preferred Newport Beach pharmacy (including Via Lido Drugs, Corona del Mar pharmacies, CVS, Walgreens, or delivery pharmacies).',
+  },
+  {
+    q: 'Do you take insurance for Newport Beach house calls?',
+    a: 'Our house call fee ($500/visit) and concierge membership are direct-pay and not billed to insurance, allowing us to provide extended, unhurried visits without insurance restrictions. However, you may still use your insurance for outside lab work, imaging, prescriptions, and specialist referrals.',
+  },
+];
+
+const placeSchema = {
+  '@type': 'Service',
+  name: 'House Call Doctor & Concierge Medicine in Newport Beach, CA',
+  serviceType: 'In-Home Medical Care / Physician House Calls',
+  provider: { '@id': `${SITE.url}/#clinic` },
+  areaServed: {
+    '@type': 'City',
+    name: 'Newport Beach, CA',
+    sameAs: 'https://en.wikipedia.org/wiki/Newport_Beach,_California',
+  },
+  description,
+  offers: {
+    '@type': 'Offer',
+    price: '500',
+    priceCurrency: 'USD',
+    description: 'Single Newport Beach physician house call ($500/visit) or Premier Concierge Membership ($500/month).',
+  },
+};
+
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beach, CA')}&output=embed`;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  schema={[
+    medicalWebPage({ path, title, description, about: 'House Call Doctor in Newport Beach, CA' }),
+    serviceSchema({ name: 'House Call Doctor in Newport Beach', path, description }),
+    placeSchema,
+    breadcrumb(crumbs),
+    faqPage(nbFaqs),
+  ]}
+>
+  <!-- HIGH-CONVERTING PAID TRAFFIC HERO -->
+  <section class="nb-hero" aria-labelledby="nb-hero-title">
+    <Image
+      src={hero}
+      alt="Dr. Sina Khaneki, MD, MPH — Newport Beach House Call Physician"
+      class="nb-hero__bg"
+      widths={[640, 1024, 1440, 1835]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="nb-hero__overlay"></div>
+
+    <div class="container nb-hero__grid">
+      <div class="nb-hero__copy">
+        <div class="nb-pill">
+          <span class="nb-pill__dot" aria-hidden="true"></span>
+          <span>Serving All Newport Beach Neighborhoods · 7 Days a Week</span>
+        </div>
+
+        <h1 id="nb-hero-title">
+          Private <span class="gold-text">House Call Doctor</span> in Newport Beach, CA
+        </h1>
+
+        <p class="nb-hero__lede">
+          Skip the crowded urgent care waiting room. Board-certified Internal Medicine physician <strong>Dr. Sina Khaneki, MD, MPH</strong> comes directly to your Newport Beach home, hotel, or office for same-day and next-day medical care.
+        </p>
+
+        <div class="nb-hero__ctas">
+          <a href={SITE.phoneHref} class="btn btn--gold btn--lg">
+            <Icon name="phone" /> Call Now: {SITE.phone}
+          </a>
+          <button type="button" class="btn btn--light btn--lg" data-open-appt>
+            <Icon name="calendar" /> Book Online
+          </button>
+        </div>
+
+        <ul class="nb-hero__trust">
+          <li><Icon name="check" size={16} /> <strong>$500</strong> flat-rate single house call (no membership required)</li>
+          <li><Icon name="check" size={16} /> Speak directly with a board-certified MD — never a call center</li>
+          <li><Icon name="check" size={16} /> Prescriptions sent immediately to your local Newport Beach pharmacy</li>
+        </ul>
+
+        <div class="nb-hero__proof">
+          <span class="nb-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={16} />)}</span>
+          <span><strong>5.0 Rating on Google</strong> · Discreet, unrushed care at your door</span>
+        </div>
+      </div>
+
+      <!-- ABOVE-THE-FOLD INSTANT LEAD CAPTURE CARD -->
+      <aside class="nb-card" aria-label="Request a Newport Beach House Call">
+        <div class="nb-card__head">
+          <span class="nb-card__badge">Fastest Response</span>
+          <h2>Request a Newport Beach House Call</h2>
+          <p>Call <a href={SITE.phoneHref}><strong>{SITE.phone}</strong></a> for immediate dispatch, or request a callback below.</p>
+        </div>
+
+        <form
+          class="nb-card__form"
+          id="nb-lead-form"
+          action={action}
+          method="POST"
+          data-has-endpoint={action ? 'true' : 'false'}
+        >
+          <input type="hidden" name="_subject" value="Newport Beach House Call Request — Paid Landing Page" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="landing_page" value="Newport Beach House Calls (/newport-beach-ca/)" />
+          <input type="hidden" name="_next" value={`${SITE.url}/contact-us/?sent=1`} />
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+          <div class="field">
+            <label for="nb-name">Your Name *</label>
+            <input id="nb-name" name="name" required autocomplete="name" placeholder="First & Last Name" />
+          </div>
+
+          <div class="nb-card__row">
+            <div class="field">
+              <label for="nb-phone">Phone Number *</label>
+              <input id="nb-phone" name="phone" type="tel" required autocomplete="tel" placeholder="(949) 555-0123" />
+            </div>
+            <div class="field">
+              <label for="nb-area">Newport Beach Area</label>
+              <select id="nb-area" name="neighborhood">
+                <option value="Newport Beach">Select Neighborhood</option>
+                {neighborhoods.map((n) => <option value={n}>{n}</option>)}
+                <option value="Newport Beach Hotel / Resort">Hotel / Resort</option>
+                <option value="Other Newport Beach">Other Newport Beach</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="nb-urgency">When do you need to be seen?</label>
+            <select id="nb-urgency" name="timeframe">
+              <option value="Today (Same-Day House Call)">Today (Same-Day House Call)</option>
+              <option value="Tomorrow (Next-Day House Call)">Tomorrow (Next-Day House Call)</option>
+              <option value="This Week">This Week</option>
+              <option value="Interested in Concierge Membership">Interested in Concierge Membership</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="nb-msg">How can Dr. Khaneki help? (Optional)</label>
+            <textarea id="nb-msg" name="message" rows="2" placeholder="Brief reason for visit (please omit sensitive details)"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--gold btn--block btn--lg">
+            Request House Call <Icon name="arrow" />
+          </button>
+
+          <p class="nb-card__note">
+            Open Mon–Sun, {SITE.hours.label}. For life-threatening emergencies, call 911.
+          </p>
+        </form>
+      </aside>
+    </div>
+  </section>
+
+  <!-- AUTHORITY STRIP -->
+  <section class="creds" aria-label="Key house call benefits">
+    <div class="container creds__grid">
+      {credentials.map((c) => (
+        <div class="cred reveal">
+          <Icon name={c.icon} size={22} />
+          <div>
+            <strong>{c.big}</strong>
+            <span>{c.small}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- WHAT WE TREAT AT YOUR NEWPORT BEACH HOME -->
+  <section class="section" aria-labelledby="treat-title">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">Comprehensive In-Home Medicine</p>
+        <h2 id="treat-title">Medical Care Brought Directly to Your Newport Beach Residence</h2>
+        <p class="lede">
+          Whether you are recovering from an acute illness at home in Corona del Mar, caring for an aging parent in Eastbluff, or staying at a resort in Newport Coast, Dr. Khaneki brings the doctor’s office to you.
+        </p>
+      </div>
+
+      <div class="grid grid-3 care-grid">
+        {careCategories.map((cat, i) => (
+          <div class="card care-card reveal" style={`transition-delay:${i * 80}ms`}>
+            <span class="icon-badge"><Icon name={cat.icon} /></span>
+            <h3>{cat.title}</h3>
+            <p>{cat.text}</p>
+            <ul class="care-list">
+              {cat.items.map((item) => (
+                <li>
+                  <Icon name="check" size={16} />
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+            <a href={SITE.phoneHref} class="care-cta">
+              Call {SITE.phone} to Schedule <Icon name="arrow" size={15} />
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY NEWPORT BEACH RESIDENTS CHOOSE US VS URGENT CARE -->
+  <section class="section section--ink" aria-labelledby="vs-title">
+    <div class="container vs-grid">
+      <div class="reveal">
+        <p class="eyebrow" style="color:var(--gold-2)">Why Choose a House Call</p>
+        <h2 id="vs-title">
+          Skip the Urgent Care Wait on PCH. <span class="gold-text">Your Physician Comes to You.</span>
+        </h2>
+        <p>
+          When you’re running a fever, dealing with severe congestion, or caring for an elderly loved one with limited mobility, the last thing you want is traffic on Pacific Coast Highway and an hour-long wait in a crowded clinic.
+        </p>
+        <p>
+          With Orange County House Calls, you never sit in a waiting room or get rushed through a 7-minute appointment. You receive 45–60+ minutes of undivided attention from a board-certified Internal Medicine physician in the privacy and comfort of your own living room.
+        </p>
+
+        <div class="vs-actions">
+          <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone}</a>
+          <button type="button" class="btn btn--light btn--lg" data-open-appt><Icon name="calendar" /> Request Visit</button>
+        </div>
+      </div>
+
+      <div class="compare compare--dark reveal" role="table" aria-label="Urgent Care vs Orange County House Calls">
+        <div class="compare__row compare__row--head" role="row">
+          <span role="columnheader">Typical Urgent Care</span>
+          <span role="columnheader">Newport Beach House Call</span>
+        </div>
+        {compare.map(([bad, good]) => (
+          <div class="compare__row" role="row">
+            <span role="cell" class="compare__bad"><Icon name="x" size={15} /> {bad}</span>
+            <span role="cell" class="compare__good"><Icon name="check" size={15} /> {good}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS IN 3 STEPS -->
+  <section class="section section--sand" aria-labelledby="steps-title">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">How It Works</p>
+        <h2 id="steps-title">A Doctor at Your Newport Beach Door in 3 Simple Steps</h2>
+        <p class="lede">Fast, discreet, and effortless — from your first phone call to follow-up care.</p>
+      </div>
+
+      <ol class="steps__list">
+        {steps.map((s, i) => (
+          <li class="step reveal" style={`transition-delay:${i * 90}ms`}>
+            <span class="step__n">{s.n}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div class="center steps__cta reveal">
+        <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone} to Book Now</a>
+        <p class="micro">Or <button type="button" class="link-btn" data-open-appt>request your house call online</button> — open 7 days, {SITE.hours.label}.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEET DR. SINA KHANEKI + TRANSPARENT PRICING -->
+  <section class="section" aria-labelledby="doc-title">
+    <div class="container doc-price-grid">
+      <div class="doc-card reveal">
+        <div class="doc-card__media">
+          <Image src={doc} alt="Dr. Sina Khaneki, MD, MPH — Newport Beach House Call Physician" width={360} height={480} class="doc-card__img" />
+          <div class="doc-card__badge">
+            <strong>{DOCTOR.name}</strong>
+            <span>Board-Certified Internal Medicine</span>
+          </div>
+        </div>
+        <div class="doc-card__body">
+          <p class="eyebrow">Meet Your Physician</p>
+          <h2 id="doc-title">Personally Treated by {DOCTOR.name}</h2>
+          <p>
+            Unlike on-demand apps that dispatch whoever is on shift, every Newport Beach patient is cared for personally by <strong>Dr. Sina Khaneki, MD, MPH</strong>.
+          </p>
+          <p>
+            Dr. Khaneki completed his Internal Medicine Residency at Hurley Medical Center / Michigan State University (serving as Ambulatory Clinic Chief Resident), earned his Master of Public Health at Indiana University, and is completing a Fellowship in Integrative and Functional Medicine at the <strong>University of California, Irvine (UCI)</strong>.
+          </p>
+          <ul class="ticks">
+            <li><Icon name="check" size={18} /> Board-Certified Internal Medicine Physician</li>
+            <li><Icon name="check" size={18} /> UCI Integrative &amp; Functional Medicine Fellow</li>
+            <li><Icon name="check" size={18} /> 14+ Peer-Reviewed Medical Publications</li>
+            <li><Icon name="check" size={18} /> Member: ACP, Obesity Medicine Association</li>
+          </ul>
+          <a href="/about/" class="btn btn--ghost btn--sm">Read Full Physician Bio <Icon name="arrow" /></a>
+        </div>
+      </div>
+
+      <!-- TRANSPARENT PRICING BOX -->
+      <div class="price reveal" id="pricing">
+        <span class="price__tag">Transparent Pricing</span>
+        <h3 class="price__name">One-Time Visit or Ongoing Concierge Care</h3>
+        <p class="price__sub">No surprise hospital bills or hidden fees. Choose what fits your needs:</p>
+
+        <div class="price__amt">
+          <div>
+            <strong>$500</strong>
+            <span>/house call</span>
+            <small>Single visit · No membership needed</small>
+          </div>
+          <div class="price__or">or</div>
+          <div>
+            <strong>$500</strong>
+            <span>/month</span>
+            <small>{MEMBERSHIP.monthlyNote}</small>
+          </div>
+        </div>
+
+        <p class="price__inc">Every Newport Beach House Call Includes:</p>
+        <ul class="price__list">
+          <li><Icon name="check" size={18} /> Unrushed in-home examination by Dr. Khaneki (MD, MPH)</li>
+          <li><Icon name="check" size={18} /> Personalized treatment plan &amp; clinical care</li>
+          <li><Icon name="check" size={18} /> Same-day prescriptions sent to your local pharmacy</li>
+          <li><Icon name="check" size={18} /> Direct physician follow-up after your visit</li>
+        </ul>
+
+        <a href={SITE.phoneHref} class="btn btn--gold btn--block btn--lg">
+          <Icon name="phone" /> Call {SITE.phone}
+        </a>
+        <button type="button" class="btn btn--light btn--block" data-open-appt style="margin-top:.65rem">
+          <Icon name="calendar" /> Request Appointment Online
+        </button>
+        <p class="price__disc">{MEMBERSHIP.disclaimer}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PATIENT STORY + GOOGLE REVIEWS -->
+  <section class="section section--sand" aria-labelledby="reviews-title">
+    <div class="container">
+      <div class="center reveal">
+        <p class="eyebrow">Patient Reviews</p>
+        <h2 id="reviews-title">Why Coastal Orange County Families Trust Dr. Khaneki</h2>
+        <p class="lede">Real 5-star experiences from patients and families who needed attentive, in-home medical care.</p>
+      </div>
+
+      {featuredStory && (
+        <blockquote class="nb-quote reveal">
+          <p>“{featuredStory.text}”</p>
+          <footer>
+            <span class="nb-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={15} />)}</span>
+            <strong>— {featuredStory.name}, Verified Google Review</strong>
+          </footer>
+        </blockquote>
+      )}
+
+      <div class="grid grid-3" style="margin-top:2rem">
+        {reviews.map((r) => (
+          <div class="reveal">
+            <ReviewCard review={r} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWPORT BEACH NEIGHBORHOODS & MAP -->
+  <section class="section" aria-labelledby="areas-title">
+    <div class="container local-grid">
+      <div class="reveal">
+        <p class="eyebrow">Service Coverage</p>
+        <h2 id="areas-title">Serving Every Neighborhood in Newport Beach, CA</h2>
+        <p>
+          From bayfront homes on Balboa Island and Lido Isle to hillside estates in Newport Coast and Pelican Hill, we provide prompt, discreet house calls across all of Newport Beach (ZIP codes <strong>92657, 92658, 92659, 92660, 92661, 92662, and 92663</strong>).
+        </p>
+
+        <ul class="nb-hoods" aria-label="Newport Beach neighborhoods served">
+          {neighborhoods.map((n) => (
+            <li><Icon name="pin" size={14} /> {n}</li>
+          ))}
+        </ul>
+
+        <div class="nb-office">
+          <Image src={consult} alt="In-home doctor consultation in Newport Beach" width={120} height={90} class="nb-office__thumb" />
+          <div>
+            <strong>Need to be seen today in Newport Beach?</strong>
+            <p>Call <a href={SITE.phoneHref}>{SITE.phone}</a> to confirm our next available arrival window.</p>
+          </div>
+        </div>
+      </div>
+
+      <iframe
+        class="local-map reveal"
+        title="Map of Newport Beach, California House Call Service Area"
+        src={mapSrc}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--sand" aria-labelledby="faq-title">
+    <div class="narrow">
+      <div class="center reveal">
+        <p class="eyebrow">Newport Beach House Call FAQs</p>
+        <h2 id="faq-title">Common Questions Before Booking</h2>
+      </div>
+      <div class="reveal" style="margin-top:2rem">
+        <FAQList faqs={nbFaqs} />
+      </div>
+      <div class="center reveal" style="margin-top:2.25rem">
+        <p style="margin-bottom:.85rem; font-weight:600; color:var(--ink)">Still have a question? Speak directly with our team:</p>
+        <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const nbForm = document.getElementById('nb-lead-form') as HTMLFormElement | null;
+  nbForm?.addEventListener('submit', (e) => {
+    if (nbForm.dataset.hasEndpoint !== 'true') {
+      e.preventDefault();
+      if (confirm('Online requests are being set up. Would you like to call us now at (949) 741-0512 for immediate Newport Beach house call scheduling?')) {
+        window.location.href = 'tel:+19497410512';
+      }
+    }
+  });
+</script>
+
+<style>
+  /* Hero */
+  .nb-hero {
+    position: relative;
+    background: var(--ink);
+    color: #d5dfe9;
+    padding: clamp(3rem, 6vw, 5.5rem) 0 clamp(4rem, 7vw, 6.5rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .nb-hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 18% center;
+    z-index: -2;
+    opacity: 0.32;
+  }
+  .nb-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(900px 420px at 85% 15%, rgba(214, 184, 120, 0.18), transparent 65%),
+      linear-gradient(105deg, rgba(14, 27, 42, 0.94) 0%, rgba(14, 27, 42, 0.85) 50%, rgba(14, 27, 42, 0.96) 100%);
+  }
+  .nb-hero__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 4.5vw, 4rem);
+    align-items: center;
+  }
+  @media (max-width: 980px) {
+    .nb-hero__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .nb-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.42rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(214, 184, 120, 0.14);
+    border: 1px solid rgba(214, 184, 120, 0.4);
+    color: var(--gold-2);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.15rem;
+  }
+  .nb-pill__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4cd97b;
+    box-shadow: 0 0 0 4px rgba(76, 217, 123, 0.2);
+  }
+  .nb-hero h1 {
+    color: #fff;
+    font-size: clamp(2.4rem, 4.8vw, 4rem);
+    margin-bottom: 1rem;
+  }
+  .nb-hero__lede {
+    font-size: 1.12rem;
+    line-height: 1.65;
+    color: #d6e0eb;
+    max-width: 56ch;
+  }
+  .nb-hero__lede strong {
+    color: #fff;
+  }
+  .nb-hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 1.6rem 0 1.4rem;
+  }
+  .nb-hero__trust {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.94rem;
+    color: #e4ebf3;
+  }
+  .nb-hero__trust li {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .nb-hero__trust :global(svg) {
+    color: var(--gold-2);
+    flex: none;
+  }
+  .nb-hero__proof {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.9rem;
+    color: #cbd6e2;
+  }
+  .nb-stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--gold-2);
+  }
+
+  /* Lead Card */
+  .nb-card {
+    background: var(--ivory);
+    color: var(--text);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(214, 184, 120, 0.45);
+    overflow: hidden;
+  }
+  .nb-card__head {
+    background: linear-gradient(160deg, var(--ink-2), var(--ink-3));
+    color: #d4dee9;
+    padding: 1.5rem 1.75rem 1.25rem;
+    border-bottom: 1px solid rgba(214, 184, 120, 0.25);
+  }
+  .nb-card__badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--gold-grad);
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .nb-card__head h2 {
+    color: #fff;
+    font-size: 1.65rem;
+    margin: 0 0 0.35rem;
+  }
+  .nb-card__head p {
+    margin: 0;
+    font-size: 0.88rem;
+  }
+  .nb-card__head a {
+    color: var(--gold-2);
+  }
+  .nb-card__form {
+    padding: 1.4rem 1.75rem 1.6rem;
+  }
+  .nb-card__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  @media (max-width: 540px) {
+    .nb-card__row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .nb-card__head,
+    .nb-card__form {
+      padding-inline: 1.25rem;
+    }
+  }
+  .nb-card__note {
+    font-size: 0.76rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0.75rem 0 0;
+  }
+
+  /* Creds strip */
+  .creds {
+    margin-top: -2.25rem;
+    position: relative;
+    z-index: 2;
+  }
+  @media (max-width: 900px) {
+    .creds {
+      margin-top: 1.5rem;
+    }
+  }
+  .creds__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  @media (max-width: 900px) {
+    .creds__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .cred {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 1.25rem 1.4rem;
+    background: #fff;
+  }
+  .cred > :global(svg) {
+    color: var(--gold);
+    flex: none;
+  }
+  .cred strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+  .cred span {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* Care Categories */
+  .care-grid {
+    margin-top: 2.75rem;
+  }
+  .care-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .care-card h3 {
+    font-size: 1.6rem;
+  }
+  .care-card p {
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+  .care-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1.5rem;
+    display: grid;
+    gap: 0.55rem;
+    flex: 1;
+  }
+  .care-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.93rem;
+  }
+  .care-list :global(svg) {
+    color: var(--gold);
+    flex: none;
+  }
+  .care-list a {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .care-list a:hover {
+    color: var(--gold);
+  }
+  .care-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--gold);
+    text-decoration: none;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Urgent Care Comparison */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (max-width: 960px) {
+    .vs-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .vs-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+  .compare {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: #fff;
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
+  }
+  .compare__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .compare__row + .compare__row {
+    border-top: 1px solid var(--line);
+  }
+  .compare__row > span {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .compare__row--head > span {
+    font-size: 0.74rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--muted);
+    background: var(--sand);
+  }
+  .compare__row--head > span:last-child {
+    background: var(--ink-2);
+    color: var(--gold-2);
+  }
+  .compare__bad {
+    color: var(--muted);
+  }
+  .compare__bad :global(svg) {
+    color: #b4544a;
+    flex: none;
+    margin-top: 0.15rem;
+  }
+  .compare__good {
+    color: var(--ink);
+    font-weight: 600;
+    background: rgba(214, 184, 120, 0.1);
+  }
+  .compare__good :global(svg) {
+    color: var(--gold);
+    flex: none;
+    margin-top: 0.15rem;
+  }
+
+  /* Steps */
+  .steps__list {
+    list-style: none;
+    padding: 0;
+    margin: 2.75rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 900px) {
+    .steps__list {
+      grid-template-columns: 1fr;
+    }
+  }
+  .step {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .step__n {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    line-height: 1;
+    background: var(--gold-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.75rem;
+  }
+  .step h3 {
+    font-size: 1.45rem;
+  }
+  .step p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.96rem;
+  }
+  .steps__cta {
+    margin-top: 2.5rem;
+  }
+  .micro {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0.85rem 0 0;
+  }
+  .link-btn {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    font-weight: 700;
+    color: var(--ink-3);
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    cursor: pointer;
+  }
+
+  /* Doctor + Pricing */
+  .doc-price-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+  @media (max-width: 980px) {
+    .doc-price-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .doc-card {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 680px) {
+    .doc-card {
+      grid-template-columns: 1fr;
+    }
+  }
+  .doc-card__media {
+    position: relative;
+  }
+  .doc-card__img {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    width: 100%;
+  }
+  .doc-card__badge {
+    margin-top: 0.75rem;
+    background: #fff;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+  }
+  .doc-card__badge strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .doc-card__badge span {
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+  .ticks {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 1.5rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .ticks li {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 600;
+    font-size: 0.94rem;
+    color: var(--ink);
+  }
+  .ticks :global(svg) {
+    color: var(--gold);
+    flex: none;
+  }
+
+  /* Price box */
+  .price {
+    position: relative;
+    background: linear-gradient(165deg, var(--ink), var(--ink-3));
+    color: #c4cedb;
+    border-radius: 26px;
+    padding: 2.2rem 2rem 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(214, 184, 120, 0.45);
+  }
+  .price__tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--ink);
+    background: var(--gold-grad);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+  }
+  .price__name {
+    color: #fff;
+    font-size: 1.9rem;
+    margin: 0.9rem 0 0.4rem;
+  }
+  .price__sub {
+    font-size: 0.9rem;
+    color: #aebbc9;
+    margin-bottom: 1rem;
+  }
+  .price__amt {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    border-block: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 1.15rem;
+  }
+  .price__amt strong {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    color: #fff;
+    line-height: 1;
+  }
+  .price__amt span {
+    color: var(--gold-2);
+    font-weight: 700;
+    margin-left: 0.15rem;
+    font-size: 0.9rem;
+  }
+  .price__amt small {
+    display: block;
+    font-size: 0.74rem;
+    color: #96a5b7;
+    margin-top: 0.3rem;
+  }
+  .price__or {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--gold-2);
+    font-size: 1.2rem;
+  }
+  .price__inc {
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+  }
+  .price__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.4rem;
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+  }
+  .price__list li {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+  }
+  .price__list :global(svg) {
+    color: var(--gold-2);
+    flex: none;
+    margin-top: 0.15rem;
+  }
+  .price__disc {
+    font-size: 0.74rem;
+    color: #8292a6;
+    margin: 1rem 0 0;
+    line-height: 1.5;
+  }
+
+  /* Featured quote */
+  .nb-quote {
+    margin: 2rem auto 0;
+    max-width: 900px;
+    background: var(--ink);
+    color: #fff;
+    padding: 2rem 2.25rem;
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--gold);
+    box-shadow: var(--shadow);
+  }
+  .nb-quote p {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-style: italic;
+    line-height: 1.5;
+    margin: 0 0 1rem;
+  }
+  .nb-quote footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--gold-2);
+  }
+
+  /* Local Neighborhoods & Map */
+  .local-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (max-width: 900px) {
+    .local-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .nb-hoods {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.55rem;
+  }
+  .nb-hoods li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .nb-hoods :global(svg) {
+    color: var(--gold);
+    flex: none;
+  }
+  .nb-office {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--sand);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-top: 1.5rem;
+  }
+  .nb-office__thumb {
+    width: 84px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex: none;
+  }
+  .nb-office strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1rem;
+  }
+  .nb-office p {
+    margin: 0.15rem 0 0;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .nb-office a {
+    font-weight: 700;
+  }
+  .local-map {
+    width: 100%;
+    height: 430px;
+    border: 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+</style>
+

@@ -4,9 +4,9 @@ export const SITE = {
   name: 'Orange County House Calls',
   legalName: 'Orange County HouseCalls',
   tagline: 'Concierge Medicine & House Call Doctor in Orange County',
-  phone: '(949) 204-1334',
-  phoneHref: 'tel:+19492041334',
-  phoneE164: '+1-949-204-1334',
+  phone: '(949) 741-0512',
+  phoneHref: 'tel:+19497410512',
+  phoneE164: '+1-949-741-0512',
   // Set this to the inbox that should receive appointment requests (FormSubmit.co)
   formEmail: '',
   address: {

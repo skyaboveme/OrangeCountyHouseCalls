@@ -12,5 +12,6 @@ export default defineConfig({
     // Legacy WordPress URLs preserved for SEO equity
     '/blog/staff/dr-sina-khaneki/': '/about/',
     '/10264-2/': '/',
+    '/newport-beach/': '/newport-beach-ca/',
   },
 });

@@ -32,6 +32,7 @@ ${DOCTOR.training.map((t) => `- ${t.title}, ${t.org} (${t.years})`).join('\n')}
 - [Patient Information](${u('/patient-information/')})
 - [All Services](${u('/services/')})
 - [Reviews](${u('/reviews/')})
+- [Newport Beach House Calls](${u('/newport-beach-ca/')})
 - [Contact](${u('/contact-us/')})
 
 ## Services
