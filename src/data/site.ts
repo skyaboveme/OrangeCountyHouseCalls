@@ -29,11 +29,11 @@ export const SITE = {
   },
   areas: [
     'Aliso Viejo', 'Laguna Niguel', 'Laguna Hills', 'Mission Viejo', 'Rancho Mission Viejo',
-    'Ladera Ranch', 'Laguna Beach', 'Dana Point', 'Coto De Caza', 'Rancho Santa Margarita',
-    'Lake Forest', 'Irvine', 'Newport Beach', 'San Clemente', 'San Juan Capistrano',
+    'Ladera Ranch', 'Laguna Beach', 'Dana Point', 'Coto de Caza', 'Rancho Santa Margarita',
+    'Lake Forest', 'Irvine', 'Newport Beach', 'Corona del Mar', 'San Clemente', 'San Juan Capistrano',
   ],
   about:
-    'Dr. Khaneki provides concierge health care 24-hours a day, 7 days a week for patients 18 and older and seniors in Aliso Viejo, Laguna Niguel, Laguna Hills, Mission Viejo, Rancho Mission Viejo, Ladera Ranch, Laguna Beach, Dana Point, Coto De Caza, Rancho Santa Margarita, Lake Forest, Irvine, Newport Beach, San Clemente, and San Juan Capistrano areas. We offer our patients Knowledgeable Internal Medicine expertise in a gentle and caring manner with a focus on you and your needs.',
+    'Dr. Khaneki provides concierge health care 24-hours a day, 7 days a week for patients 18 and older and seniors in Aliso Viejo, Laguna Niguel, Laguna Hills, Mission Viejo, Rancho Mission Viejo, Ladera Ranch, Laguna Beach, Dana Point, Coto de Caza, Rancho Santa Margarita, Lake Forest, Irvine, Newport Beach, Corona del Mar, San Clemente, and San Juan Capistrano areas. We offer our patients Knowledgeable Internal Medicine expertise in a gentle and caring manner with a focus on you and your needs.',
 };
 
 export const DOCTOR = {

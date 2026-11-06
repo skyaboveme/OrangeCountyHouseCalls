@@ -18,5 +18,17 @@ User-agent: Google-Extended
 Allow: /
 User-agent: Applebot-Extended
 Allow: /
+User-agent: Meta-ExternalAgent
+Allow: /
+User-agent: Amazonbot
+Allow: /
+User-agent: DuckAssistBot
+Allow: /
+User-agent: YouBot
+Allow: /
 
 Sitemap: https://orangecountyhousecalls.com/sitemap-index.xml
+
+# AI / LLM Answer Engine Resources (https://llmstxt.org)
+# Summary Index: https://orangecountyhousecalls.com/llms.txt
+# Full Knowledge Base: https://orangecountyhousecalls.com/llms-full.txt

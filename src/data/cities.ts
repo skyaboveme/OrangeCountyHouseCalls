@@ -509,6 +509,45 @@ export const CITIES: CityHouseCallData[] = [
     lng: -117.9289,
   },
   {
+    name: 'Corona del Mar',
+    slug: 'corona-del-mar-ca',
+    shortSlug: 'corona-del-mar',
+    path: '/corona-del-mar-ca/',
+    regionLabel: 'Coastal Orange County · 92625',
+    driveNote: 'Quick 15-minute coastal arrival via SR-73 & MacArthur Blvd straight into Corona del Mar',
+    heroPill: 'Serving Cameo Shores, the Flower Streets & All CdM · 7 Days',
+    heroLede:
+      'Private, unrushed physician house calls in Corona del Mar, CA. Board-certified Internal Medicine physician Dr. Sina Khaneki, MD, MPH comes directly to your Corona del Mar residence or coastal villa — 7 days a week.',
+    localIntro:
+      'From oceanfront estates in Cameo Shores and Shorecliffs to village homes along the Flower Streets and hillside residences in Spyglass Hill, Irvine Terrace, and Harbor View Hills, Corona del Mar residents rely on Dr. Khaneki for discreet 45–60+ minute in-home medical care.',
+    urgentCarePainPoint:
+      'Dealing with East Coast Highway Village congestion or driving across Newport Beach to sit in a crowded urgent care lobby is the last thing you want when you or a loved one are unwell.',
+    urgentCareRoad: 'East Coast Hwy (PCH), MacArthur Blvd, or Marguerite Ave',
+    pharmacyNote:
+      'Corona del Mar Plaza pharmacies, East Coast Highway CVS, Via Lido Drugs, or concierge prescription delivery',
+    gatedOrAccessNote:
+      'Discreet arrival at guard-gated and private coastal enclaves across 92625 — including Cameo Shores, Cameo Highlands, Jasmine Creek, Irvine Terrace, Shorecliffs, and Harbor View Hills.',
+    zipCodes: ['92625'],
+    neighborhoods: [
+      'Flower Streets (CdM Village)',
+      'Cameo Shores',
+      'Cameo Highlands',
+      'Shorecliffs',
+      'Irvine Terrace',
+      'Harbor View Hills',
+      'Spyglass Hill',
+      'Jasmine Creek',
+      'Corona Highlands',
+      'Buck Gully / Little Corona',
+      'Channel Reef',
+      'Sailhouse',
+    ],
+    hasResortsOrHotels: true,
+    wikiUrl: 'https://en.wikipedia.org/wiki/Corona_del_Mar,_Newport_Beach',
+    lat: 33.5982,
+    lng: -117.8731,
+  },
+  {
     name: 'San Clemente',
     slug: 'san-clemente-ca',
     shortSlug: 'san-clemente',

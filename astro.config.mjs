@@ -26,6 +26,7 @@ export default defineConfig({
     '/lake-forest/': '/lake-forest-ca/',
     '/irvine/': '/irvine-ca/',
     '/newport-beach/': '/newport-beach-ca/',
+    '/corona-del-mar/': '/corona-del-mar-ca/',
     '/san-clemente/': '/san-clemente-ca/',
     '/san-juan-capistrano/': '/san-juan-capistrano-ca/',
   },
