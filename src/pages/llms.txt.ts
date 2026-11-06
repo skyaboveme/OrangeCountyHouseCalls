@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { SITE, DOCTOR, MEMBERSHIP } from '../data/site';
+import { CITIES } from '../data/cities';
 import { services, posts } from '../lib/content';
 
 // llms.txt — concise, machine-readable brand summary for AI assistants / answer engines
@@ -32,8 +33,10 @@ ${DOCTOR.training.map((t) => `- ${t.title}, ${t.org} (${t.years})`).join('\n')}
 - [Patient Information](${u('/patient-information/')})
 - [All Services](${u('/services/')})
 - [Reviews](${u('/reviews/')})
-- [Newport Beach House Calls](${u('/newport-beach-ca/')})
 - [Contact](${u('/contact-us/')})
+
+## Orange County City House Call Pages
+${CITIES.map((c) => `- [House Call Doctor in ${c.name}, CA](${u(c.path)}): Same-day & next-day in-home physician visits across ${c.name} (${c.zipCodes.join(', ')})`).join('\n')}
 
 ## Services
 ${services.map((s) => `- [${s.name}](${u(s.path)}): ${s.description}`).join('\n')}

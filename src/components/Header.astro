@@ -3,14 +3,22 @@ import { Image } from 'astro:assets';
 import logo from '../assets/logo-clean.png';
 import Icon from './Icon.astro';
 import { NAV, SITE } from '../data/site';
+interface Props { cityName?: string }
+const { cityName } = Astro.props;
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 <div class="topbar">
   <div class="container topbar__inner">
-    <a href={SITE.directionsUrl} target="_blank" rel="noopener" class="topbar__item">
-      <Icon name="pin" size={15} /> {SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.postal}
-    </a>
+    {cityName ? (
+      <span class="topbar__item">
+        <Icon name="home" size={15} /> House Calls in {cityName}, CA — We Come to Your Door
+      </span>
+    ) : (
+      <a href={SITE.directionsUrl} target="_blank" rel="noopener" class="topbar__item">
+        <Icon name="pin" size={15} /> {SITE.address.street}, {SITE.address.city}, {SITE.address.region} {SITE.address.postal}
+      </a>
+    )}
     <span class="topbar__item hide-sm"><Icon name="clock" size={15} /> Open 7 days · {SITE.hours.label}</span>
     <a href={SITE.phoneHref} class="topbar__item topbar__phone"><Icon name="phone" size={15} /> {SITE.phone}</a>
   </div>
@@ -89,7 +97,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   .topbar a:hover { color: var(--gold-2); }
   .topbar__phone { font-weight: 700; color: #fff; margin-left: auto; }
   @media (max-width: 760px) { .hide-sm { display: none; } .topbar__inner { font-size: .76rem; gap: .75rem; } }
-  @media (max-width: 520px) { .topbar__inner > a:first-child { display: none; } .topbar__phone { margin: 0 auto; } }
+  @media (max-width: 520px) { .topbar__inner > :first-child { display: none; } .topbar__phone { margin: 0 auto; } }
 
   .site-header {
     position: sticky; top: 0; z-index: 50; background: rgba(5, 5, 5, .96);

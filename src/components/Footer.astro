@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import logo from '../assets/logo-clean.png';
 import Icon from './Icon.astro';
 import { SITE } from '../data/site';
+import { CITIES } from '../data/cities';
 const year = new Date().getFullYear();
 const quick = [
   { label: 'About Dr. Khaneki', href: '/about/' },
@@ -77,7 +78,13 @@ const featured = [
   </div>
 
   <div class="container footer__areas">
-    <strong>Serving:</strong> {SITE.areas.join(' · ')}
+    <strong>Serving:</strong>{' '}
+    {CITIES.map((c, i) => (
+      <>
+        {i > 0 && ' · '}
+        <a href={c.path}>{c.name}</a>
+      </>
+    ))}
   </div>
 
   <div class="footer__bottom">

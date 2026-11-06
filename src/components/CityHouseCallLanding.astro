@@ -1,54 +1,59 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Icon from '../../components/Icon.astro';
-import ReviewCard from '../../components/ReviewCard.astro';
-import FAQList from '../../components/FAQList.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from './Icon.astro';
+import ReviewCard from './ReviewCard.astro';
+import FAQList from './FAQList.astro';
 import { Image } from 'astro:assets';
-import hero from '../../assets/s1-new-2.jpg';
-import consult from '../../assets/s1.jpg';
-import doc from '../../assets/dr-khaneki-2607.jpg';
-import { SITE, DOCTOR, MEMBERSHIP } from '../../data/site';
-import { REVIEWS } from '../../data/reviews';
-import { breadcrumb, faqPage, medicalWebPage, serviceSchema } from '../../lib/schema';
+import hero from '../assets/s1-new-2.jpg';
+import consult from '../assets/s1.jpg';
+import doc from '../assets/dr-khaneki-2607.jpg';
+import { SITE, DOCTOR, MEMBERSHIP } from '../data/site';
+import { REVIEWS } from '../data/reviews';
+import { CITIES, type CityHouseCallData } from '../data/cities';
+import { breadcrumb, faqPage, medicalWebPage, serviceSchema } from '../lib/schema';
 
-const path = '/newport-beach-ca/';
-const title = `House Call Doctor in Newport Beach, CA | Same-Day In-Home Physician | ${SITE.phone}`;
-const description = `Need a house call doctor in Newport Beach, CA? Board-certified Internal Medicine physician Dr. Sina Khaneki, MD, MPH brings private, unrushed medical care directly to your Newport Beach home, hotel, or office — 7 days a week. Call ${SITE.phone}.`;
+interface Props {
+  city: CityHouseCallData;
+}
+
+const { city } = Astro.props;
+const { path, name } = city;
+
+const title = `House Call Doctor in ${name}, CA | Same-Day In-Home Physician | ${SITE.phone}`;
+const description = `Need a house call doctor in ${name}, CA? Board-certified Internal Medicine physician Dr. Sina Khaneki, MD, MPH brings private, unrushed medical care directly to your ${name} home, office, or senior residence — 7 days a week. Call ${SITE.phone}.`;
 
 const crumbs = [
   { name: 'Home', path: '/' },
-  { name: 'Newport Beach House Calls', path },
+  { name: `${name} House Calls`, path },
 ];
 
 const action = SITE.formEmail ? `https://formsubmit.co/${SITE.formEmail}` : '';
 
-const neighborhoods = [
-  'Corona del Mar',
-  'Newport Coast',
-  'Balboa Island',
-  'Balboa Peninsula',
-  'Lido Isle',
-  'Pelican Hill',
-  'Harbor Ridge',
-  'Dover Shores',
-  'Eastbluff',
-  'Newport Heights',
-  'Fashion Island Area',
-  'Crystal Cove',
-];
-
 const credentials = [
   { icon: 'shield', big: 'Board-Certified', small: 'Internal Medicine (MD, MPH)' },
-  { icon: 'clock', big: 'Same-Day / Next-Day', small: 'Open 7 Days · 6 AM – 8 PM' },
-  { icon: 'home', big: 'At Your Doorstep', small: 'Home, Hotel, Office or Senior Living' },
-  { icon: 'star', big: '5.0 ★ Rated', small: 'Trusted Across Coastal Orange County' },
+  { icon: 'clock', big: 'Same-Day / Next-Day', small: `Open 7 Days · ${SITE.hours.label}` },
+  {
+    icon: 'home',
+    big: 'At Your Doorstep',
+    small: city.hasResortsOrHotels ? 'Home, Hotel, Office or Senior Living' : 'Home, Estate, Office or Senior Living',
+  },
+  { icon: 'star', big: '5.0 ★ Rated', small: city.regionLabel },
+];
+
+const toolkit = [
+  'Complete vitals & unhurried physical exam',
+  'Rapid point-of-care flu, strep & respiratory evaluation',
+  'Minor wound, rash, burn & sprain care',
+  'Medication review & chronic disease management',
+  `Same-day e-prescriptions to ${name} pharmacies`,
+  'Direct phone follow-up with Dr. Khaneki',
 ];
 
 const careCategories = [
   {
     icon: 'activity',
     title: 'Urgent & Sick House Calls',
-    text: 'Skip the crowded Newport Beach urgent care waiting room. Get thorough in-home evaluation and rapid relief when you or a loved one feel unwell.',
+    text: `Skip the crowded ${name} urgent care lobby. Get thorough in-home diagnosis and rapid symptom relief when you or a family member feel unwell.`,
     items: [
       { label: 'Cold, Flu & Respiratory Illness', href: '/aliso-viejo-ca/common-cold-and-flu-treatment/' },
       { label: 'Sinus, Ear & Strep Throat Infections', href: '/aliso-viejo-ca/sinus-infection-treatment/' },
@@ -59,7 +64,7 @@ const careCategories = [
   {
     icon: 'heart',
     title: 'Senior & Geriatric House Calls',
-    text: 'Compassionate, unhurried medical visits for older adults at home or in Newport Beach senior living communities — giving families complete peace of mind.',
+    text: `Compassionate, unhurried medical visits for older adults at home or in ${name} senior living communities — giving families complete peace of mind.`,
     items: [
       { label: 'Comprehensive Geriatric Care', href: '/aliso-viejo-ca/geriatric-medicine/' },
       { label: 'Post-Hospital & Fall Evaluations', href: '/aliso-viejo-ca/when-an-older-person-falls/' },
@@ -70,7 +75,7 @@ const careCategories = [
   {
     icon: 'stethoscope',
     title: 'Concierge Primary Care & Wellness',
-    text: 'Ongoing private physician access, executive-level preventive care, and medically supervised weight loss tailored to your lifestyle.',
+    text: 'Ongoing private physician access, executive-level preventive care, and medically supervised weight loss tailored to your schedule.',
     items: [
       { label: 'Premier Concierge Medicine', href: '/aliso-viejo-ca/concierge-medicine/' },
       { label: 'Physician-Guided Weight Loss', href: '/aliso-viejo-ca/weight-loss-treatment/' },
@@ -84,120 +89,128 @@ const steps = [
   {
     n: '01',
     title: 'Call or Request Online',
-    text: `Call us directly at ${SITE.phone} or submit the quick form on this page. We confirm your symptoms, Newport Beach location, and preferred arrival window.`,
+    text: `Call us directly at ${SITE.phone} or submit the quick request form on this page. We confirm your symptoms, ${name} address or gate details, and preferred arrival window.`,
   },
   {
     n: '02',
-    title: 'Dr. Khaneki Arrives at Your Door',
-    text: 'A board-certified Internal Medicine physician — never a rotating gig-economy provider — arrives at your home, coastal residence, hotel, or office.',
+    title: `Dr. Khaneki Arrives in ${name}`,
+    text: `A board-certified Internal Medicine physician — never a rotating app contractor — arrives directly at your ${name} home, gated community, senior residence, or office.`,
   },
   {
     n: '03',
-    title: 'Unrushed Exam, Treatment & Follow-Up',
-    text: 'Receive a thorough evaluation, personalized treatment plan, prescriptions sent straight to your preferred Newport Beach pharmacy, and direct follow-up access.',
+    title: 'Unrushed Care & Local Prescriptions',
+    text: `Receive a 45–60+ minute exam, clear treatment plan, prescriptions sent immediately to ${city.pharmacyNote}, and direct physician follow-up.`,
   },
 ];
 
 const compare = [
-  ['Driving down PCH or MacArthur while sick', 'Stay resting in your own Newport Beach bed'],
-  ['60–90+ minute urgent care wait times', 'Same-day or next-day scheduled arrival'],
-  ['7-minute rushed visit with a mid-level provider', 'Extended, unhurried visit with an MD, MPH Internist'],
-  ['Exposure to contagious waiting rooms', '100% private, discreet care at your residence'],
-  ['Hard to reach anyone for follow-up questions', 'Direct phone access to Dr. Khaneki'],
+  [`Driving on ${city.urgentCareRoad} while sick`, `Stay resting comfortably in your ${name} home`],
+  ['60–90+ minute urgent care lobby wait times', 'Same-day or next-day scheduled arrival window'],
+  ['7-minute rushed visit with a mid-level provider', 'Extended 45–60+ minute visit with an MD, MPH Internist'],
+  ['Exposure to contagious walk-in waiting rooms', '100% private, discreet care in your own living room'],
+  ['Hard to reach anyone for follow-up questions', 'Direct follow-up access to Dr. Khaneki'],
 ];
 
 const reviews = REVIEWS.filter((r) => r.source === 'Google').slice(0, 3);
 const featuredStory = REVIEWS.find((r) => r.name === 'Omid H');
 
-const nbFaqs = [
+const cityFaqs = [
   {
-    q: 'How quickly can a house call doctor arrive in Newport Beach?',
-    a: `We offer same-day and next-day house call appointments throughout Newport Beach 7 days a week from ${SITE.hours.label}. For the fastest dispatch, call us directly at <a href="${SITE.phoneHref}">${SITE.phone}</a>.`,
+    q: `How quickly can a house call doctor arrive in ${name}?`,
+    a: `${city.driveNote}. We offer same-day and next-day house call appointments throughout ${name} 7 days a week from ${SITE.hours.label}. For the fastest dispatch, call <a href="${SITE.phoneHref}">${SITE.phone}</a>.`,
   },
   {
-    q: 'Do I need a monthly membership to book a single house call in Newport Beach?',
-    a: 'No. You can book a one-time Newport Beach house call for a flat <strong>$500/visit</strong> with no membership required. If you want ongoing direct physician access, house calls, telemedicine, and in-office care year-round, our Premier Concierge Membership is $500/month (with a 1-year membership).',
+    q: `Do I need a concierge membership to book a one-time house call in ${name}?`,
+    a: `No. You can book a single ${name} house call for a flat <strong>$500/visit</strong> with no membership required. If you want ongoing year-round direct physician access, house calls, telemedicine, and in-office care, our Premier Concierge Membership is $500/month (with a 1-year membership).`,
   },
   {
-    q: 'Which Newport Beach neighborhoods, hotels, and communities do you serve?',
-    a: 'Dr. Khaneki travels to homes, estates, offices, yachts/marinas, senior living communities, and resorts across all of Newport Beach — including Corona del Mar, Newport Coast, Pelican Hill, Balboa Island, Balboa Peninsula, Lido Isle, Dover Shores, Harbor Ridge, Eastbluff, Newport Heights, and Crystal Cove.',
+    q: `Which ${name} neighborhoods and gated communities do you serve?`,
+    a: `Dr. Khaneki serves every neighborhood in ${name} (ZIP ${city.zipCodes.length > 1 ? 'codes' : 'code'} ${city.zipCodes.join(', ')}), including ${city.neighborhoods.slice(0, 8).join(', ')}, and surrounding enclaves. ${city.gatedOrAccessNote}`,
   },
   {
-    q: 'Will I see an actual board-certified MD during my house call?',
+    q: 'Will I be seen by an actual board-certified MD during my house call?',
     a: 'Yes. Every house call is personally performed by <strong>Dr. Sina Khaneki, MD, MPH</strong>, a board-certified Internal Medicine physician and former Ambulatory Clinic Chief Resident — never an outsourced urgent care contractor.',
   },
   {
-    q: 'Can Dr. Khaneki send prescriptions to my Newport Beach pharmacy?',
-    a: 'Yes. If medication is medically appropriate, Dr. Khaneki electronically sends prescriptions immediately to your preferred Newport Beach pharmacy (including Via Lido Drugs, Corona del Mar pharmacies, CVS, Walgreens, or delivery pharmacies).',
+    q: `Can Dr. Khaneki send prescriptions to my pharmacy in ${name}?`,
+    a: `Yes. Whenever medication is medically appropriate, Dr. Khaneki electronically sends prescriptions right away to ${city.pharmacyNote}.`,
   },
   {
-    q: 'Do you take insurance for Newport Beach house calls?',
-    a: 'Our house call fee ($500/visit) and concierge membership are direct-pay and not billed to insurance, allowing us to provide extended, unhurried visits without insurance restrictions. However, you may still use your insurance for outside lab work, imaging, prescriptions, and specialist referrals.',
+    q: `Do you accept insurance for ${name} house calls?`,
+    a: 'Our house call fee ($500/visit) and concierge membership are direct-pay and not billed to insurance, allowing us to provide extended, unhurried in-home visits without insurance restrictions. You may still use your insurance for outside lab work, imaging, prescriptions, and specialist referrals.',
   },
 ];
 
 const placeSchema = {
   '@type': 'Service',
-  name: 'House Call Doctor & Concierge Medicine in Newport Beach, CA',
+  name: `House Call Doctor & Concierge Medicine in ${name}, CA`,
   serviceType: 'In-Home Medical Care / Physician House Calls',
   provider: { '@id': `${SITE.url}/#clinic` },
   areaServed: {
     '@type': 'City',
-    name: 'Newport Beach, CA',
-    sameAs: 'https://en.wikipedia.org/wiki/Newport_Beach,_California',
+    name: `${name}, CA`,
+    sameAs: city.wikiUrl,
   },
   description,
   offers: {
     '@type': 'Offer',
     price: '500',
     priceCurrency: 'USD',
-    description: 'Single Newport Beach physician house call ($500/visit) or Premier Concierge Membership ($500/month).',
+    description: `Single ${name} physician house call ($500/visit) or Premier Concierge Membership ($500/month).`,
   },
 };
 
-const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beach, CA')}&output=embed`;
+const cityPlaceNode = {
+  '@type': 'City',
+  name,
+  containedInPlace: { '@type': 'AdministrativeArea', name: 'Orange County, California' },
+  sameAs: city.wikiUrl,
+};
+
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(`${name}, CA`)}&output=embed`;
+const otherCities = CITIES.filter((c) => c.slug !== city.slug);
 ---
 
 <BaseLayout
   title={title}
   description={description}
+  cityContext={{ name, lat: city.lat, lng: city.lng }}
   schema={[
-    medicalWebPage({ path, title, description, about: 'House Call Doctor in Newport Beach, CA' }),
-    serviceSchema({ name: 'House Call Doctor in Newport Beach', path, description }),
+    medicalWebPage({ path, title, description, about: `House Call Doctor in ${name}, CA` }),
+    serviceSchema({ name: `House Call Doctor in ${name}`, path, description }),
     placeSchema,
+    cityPlaceNode,
     breadcrumb(crumbs),
-    faqPage(nbFaqs),
+    faqPage(cityFaqs),
   ]}
 >
-  <!-- HIGH-CONVERTING PAID TRAFFIC HERO -->
-  <section class="nb-hero" aria-labelledby="nb-hero-title">
+  <!-- HIGH-CONVERTING CITY HOUSE CALL HERO -->
+  <section class="hc-hero" aria-labelledby="hc-hero-title">
     <Image
       src={hero}
-      alt="Dr. Sina Khaneki, MD, MPH — Newport Beach House Call Physician"
-      class="nb-hero__bg"
+      alt={`Dr. Sina Khaneki, MD, MPH — ${name} House Call Physician`}
+      class="hc-hero__bg"
       widths={[640, 1024, 1440, 1835]}
       sizes="100vw"
       loading="eager"
       fetchpriority="high"
     />
-    <div class="nb-hero__overlay"></div>
+    <div class="hc-hero__overlay"></div>
 
-    <div class="container nb-hero__grid">
-      <div class="nb-hero__copy">
-        <div class="nb-pill">
-          <span class="nb-pill__dot" aria-hidden="true"></span>
-          <span>Serving All Newport Beach Neighborhoods · 7 Days a Week</span>
+    <div class="container hc-hero__grid">
+      <div class="hc-hero__copy">
+        <div class="hc-pill">
+          <span class="hc-pill__dot" aria-hidden="true"></span>
+          <span>{city.heroPill}</span>
         </div>
 
-        <h1 id="nb-hero-title">
-          Private <span class="gold-text">House Call Doctor</span> in Newport Beach, CA
+        <h1 id="hc-hero-title">
+          Private <span class="gold-text">House Call Doctor</span> in {name}, CA
         </h1>
 
-        <p class="nb-hero__lede">
-          Skip the crowded urgent care waiting room. Board-certified Internal Medicine physician <strong>Dr. Sina Khaneki, MD, MPH</strong> comes directly to your Newport Beach home, hotel, or office for same-day and next-day medical care.
-        </p>
+        <p class="hc-hero__lede">{city.heroLede}</p>
 
-        <div class="nb-hero__ctas">
+        <div class="hc-hero__ctas">
           <a href={SITE.phoneHref} class="btn btn--gold btn--lg">
             <Icon name="phone" /> Call Now: {SITE.phone}
           </a>
@@ -206,63 +219,66 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
           </button>
         </div>
 
-        <ul class="nb-hero__trust">
+        <ul class="hc-hero__trust">
           <li><Icon name="check" size={16} /> <strong>$500</strong> flat-rate single house call (no membership required)</li>
-          <li><Icon name="check" size={16} /> Speak directly with a board-certified MD — never a call center</li>
-          <li><Icon name="check" size={16} /> Prescriptions sent immediately to your local Newport Beach pharmacy</li>
+          <li><Icon name="check" size={16} /> Personally treated by a board-certified MD — never a call center</li>
+          <li><Icon name="check" size={16} /> Same-day prescriptions sent to your local {name} pharmacy</li>
         </ul>
 
-        <div class="nb-hero__proof">
-          <span class="nb-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={16} />)}</span>
-          <span><strong>5.0 Rating on Google</strong> · Discreet, unrushed care at your door</span>
+        <div class="hc-hero__proof">
+          <span class="hc-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={16} />)}</span>
+          <span><strong>5.0 Rating on Google</strong> · Discreet, unhurried care at your door</span>
         </div>
       </div>
 
-      <!-- ABOVE-THE-FOLD INSTANT LEAD CAPTURE CARD -->
-      <aside class="nb-card" aria-label="Request a Newport Beach House Call">
-        <div class="nb-card__head">
-          <span class="nb-card__badge">Fastest Response</span>
-          <h2>Request a Newport Beach House Call</h2>
-          <p>Call <a href={SITE.phoneHref}><strong>{SITE.phone}</strong></a> for immediate dispatch, or request a callback below.</p>
+      <!-- ABOVE-THE-FOLD CITY LEAD CAPTURE CARD -->
+      <aside class="hc-card" aria-label={`Request a ${name} House Call`}>
+        <div class="hc-card__head">
+          <span class="hc-card__badge">Fastest Dispatch</span>
+          <h2>Request a {name} House Call</h2>
+          <p>Call <a href={SITE.phoneHref}><strong>{SITE.phone}</strong></a> for immediate scheduling, or request a callback below.</p>
         </div>
 
         <form
-          class="nb-card__form"
-          id="nb-lead-form"
+          class="hc-card__form"
+          id="city-lead-form"
           action={action}
           method="POST"
           data-has-endpoint={action ? 'true' : 'false'}
+          data-city={name}
         >
-          <input type="hidden" name="_subject" value="Newport Beach House Call Request — Paid Landing Page" />
+          <input type="hidden" name="_subject" value={`${name} House Call Request — Landing Page`} />
           <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="landing_page" value="Newport Beach House Calls (/newport-beach-ca/)" />
+          <input type="hidden" name="city" value={`${name}, CA`} />
+          <input type="hidden" name="landing_page" value={path} />
           <input type="hidden" name="_next" value={`${SITE.url}/contact-us/?sent=1`} />
           <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
 
           <div class="field">
-            <label for="nb-name">Your Name *</label>
-            <input id="nb-name" name="name" required autocomplete="name" placeholder="First & Last Name" />
+            <label for="hc-name">Your Name *</label>
+            <input id="hc-name" name="name" required autocomplete="name" placeholder="First & Last Name" />
           </div>
 
-          <div class="nb-card__row">
+          <div class="hc-card__row">
             <div class="field">
-              <label for="nb-phone">Phone Number *</label>
-              <input id="nb-phone" name="phone" type="tel" required autocomplete="tel" placeholder="(949) 555-0123" />
+              <label for="hc-phone">Phone Number *</label>
+              <input id="hc-phone" name="phone" type="tel" required autocomplete="tel" placeholder="(949) 555-0123" />
             </div>
             <div class="field">
-              <label for="nb-area">Newport Beach Area</label>
-              <select id="nb-area" name="neighborhood">
-                <option value="Newport Beach">Select Neighborhood</option>
-                {neighborhoods.map((n) => <option value={n}>{n}</option>)}
-                <option value="Newport Beach Hotel / Resort">Hotel / Resort</option>
-                <option value="Other Newport Beach">Other Newport Beach</option>
+              <label for="hc-area">{name} Area</label>
+              <select id="hc-area" name="neighborhood">
+                <option value={name}>Select Neighborhood</option>
+                {city.neighborhoods.map((n) => <option value={`${n} (${name})`}>{n}</option>)}
+                {city.hasResortsOrHotels && <option value={`${name} Hotel / Resort`}>Hotel / Resort</option>}
+                <option value={`Senior Living (${name})`}>Senior Living Community</option>
+                <option value={`Other ${name}`}>Other {name}</option>
               </select>
             </div>
           </div>
 
           <div class="field">
-            <label for="nb-urgency">When do you need to be seen?</label>
-            <select id="nb-urgency" name="timeframe">
+            <label for="hc-urgency">When do you need to be seen?</label>
+            <select id="hc-urgency" name="timeframe">
               <option value="Today (Same-Day House Call)">Today (Same-Day House Call)</option>
               <option value="Tomorrow (Next-Day House Call)">Tomorrow (Next-Day House Call)</option>
               <option value="This Week">This Week</option>
@@ -271,15 +287,15 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
           </div>
 
           <div class="field">
-            <label for="nb-msg">How can Dr. Khaneki help? (Optional)</label>
-            <textarea id="nb-msg" name="message" rows="2" placeholder="Brief reason for visit (please omit sensitive details)"></textarea>
+            <label for="hc-msg">How can Dr. Khaneki help? (Optional)</label>
+            <textarea id="hc-msg" name="message" rows="2" placeholder="Brief reason for visit (please omit sensitive details)"></textarea>
           </div>
 
           <button type="submit" class="btn btn--gold btn--block btn--lg">
-            Request House Call <Icon name="arrow" />
+            Request {name} House Call <Icon name="arrow" />
           </button>
 
-          <p class="nb-card__note">
+          <p class="hc-card__note">
             Open Mon–Sun, {SITE.hours.label}. For life-threatening emergencies, call 911.
           </p>
         </form>
@@ -302,15 +318,13 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     </div>
   </section>
 
-  <!-- WHAT WE TREAT AT YOUR NEWPORT BEACH HOME -->
+  <!-- WHAT WE TREAT AT YOUR HOME + IN-HOME TOOLKIT -->
   <section class="section" aria-labelledby="treat-title">
     <div class="container">
       <div class="center reveal">
-        <p class="eyebrow">Comprehensive In-Home Medicine</p>
-        <h2 id="treat-title">Medical Care Brought Directly to Your Newport Beach Residence</h2>
-        <p class="lede">
-          Whether you are recovering from an acute illness at home in Corona del Mar, caring for an aging parent in Eastbluff, or staying at a resort in Newport Coast, Dr. Khaneki brings the doctor’s office to you.
-        </p>
+        <p class="eyebrow">In-Home Medical Care in {name}</p>
+        <h2 id="treat-title">Comprehensive Doctor Visits at Your {name} Residence</h2>
+        <p class="lede">{city.localIntro}</p>
       </div>
 
       <div class="grid grid-3 care-grid">
@@ -333,22 +347,36 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
           </div>
         ))}
       </div>
+
+      <!-- WHAT DR. KHANEKI BRINGS TO YOUR HOME -->
+      <div class="toolkit reveal">
+        <div>
+          <p class="eyebrow">Everything Needed for Thorough Care</p>
+          <h3>What Happens During Your {name} House Call</h3>
+          <p class="toolkit__sub">
+            Dr. Khaneki arrives directly at your residence equipped to evaluate, diagnose, and treat acute and chronic conditions without you stepping foot outside.
+          </p>
+        </div>
+        <ul class="toolkit__list">
+          {toolkit.map((item) => (
+            <li><Icon name="check" size={17} /> {item}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
-  <!-- WHY NEWPORT BEACH RESIDENTS CHOOSE US VS URGENT CARE -->
+  <!-- WHY RESIDENTS CHOOSE HOUSE CALLS OVER URGENT CARE -->
   <section class="section section--ink" aria-labelledby="vs-title">
     <div class="container vs-grid">
       <div class="reveal">
-        <p class="eyebrow" style="color:var(--gold-2)">Why Choose a House Call</p>
+        <p class="eyebrow" style="color:var(--gold-2)">Why {name} Patients Switch</p>
         <h2 id="vs-title">
-          Skip the Urgent Care Wait on PCH. <span class="gold-text">Your Physician Comes to You.</span>
+          Skip Urgent Care Waits. <span class="gold-text">Your Doctor Comes to You in {name}.</span>
         </h2>
+        <p>{city.urgentCarePainPoint}</p>
         <p>
-          When you’re running a fever, dealing with severe congestion, or caring for an elderly loved one with limited mobility, the last thing you want is traffic on Pacific Coast Highway and an hour-long wait in a crowded clinic.
-        </p>
-        <p>
-          With Orange County House Calls, you never sit in a waiting room or get rushed through a 7-minute appointment. You receive 45–60+ minutes of undivided attention from a board-certified Internal Medicine physician in the privacy and comfort of your own living room.
+          With Orange County House Calls, you never sit in a crowded lobby or get rushed through a 7-minute visit. You receive 45–60+ minutes of unhurried, one-on-one care from a board-certified Internal Medicine physician in the privacy and comfort of your own {name} home.
         </p>
 
         <div class="vs-actions">
@@ -357,10 +385,10 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
         </div>
       </div>
 
-      <div class="compare compare--dark reveal" role="table" aria-label="Urgent Care vs Orange County House Calls">
+      <div class="compare reveal" role="table" aria-label={`Urgent Care vs ${name} House Call`}>
         <div class="compare__row compare__row--head" role="row">
-          <span role="columnheader">Typical Urgent Care</span>
-          <span role="columnheader">Newport Beach House Call</span>
+          <span role="columnheader">Typical Walk-In Clinic</span>
+          <span role="columnheader">{name} House Call</span>
         </div>
         {compare.map(([bad, good]) => (
           <div class="compare__row" role="row">
@@ -377,8 +405,8 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     <div class="container">
       <div class="center reveal">
         <p class="eyebrow">How It Works</p>
-        <h2 id="steps-title">A Doctor at Your Newport Beach Door in 3 Simple Steps</h2>
-        <p class="lede">Fast, discreet, and effortless — from your first phone call to follow-up care.</p>
+        <h2 id="steps-title">A Physician at Your {name} Door in 3 Simple Steps</h2>
+        <p class="lede">{city.driveNote} — fast, discreet, and effortless from your first call to follow-up.</p>
       </div>
 
       <ol class="steps__list">
@@ -393,7 +421,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
 
       <div class="center steps__cta reveal">
         <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone} to Book Now</a>
-        <p class="micro">Or <button type="button" class="link-btn" data-open-appt>request your house call online</button> — open 7 days, {SITE.hours.label}.</p>
+        <p class="micro">Or <button type="button" class="link-btn" data-open-appt>request your {name} house call online</button> — open 7 days, {SITE.hours.label}.</p>
       </div>
     </div>
   </section>
@@ -403,7 +431,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     <div class="container doc-price-grid">
       <div class="doc-card reveal">
         <div class="doc-card__media">
-          <Image src={doc} alt="Dr. Sina Khaneki, MD, MPH — Newport Beach House Call Physician" width={360} height={480} class="doc-card__img" />
+          <Image src={doc} alt={`Dr. Sina Khaneki, MD, MPH — ${name} House Call Physician`} width={360} height={480} class="doc-card__img" />
           <div class="doc-card__badge">
             <strong>{DOCTOR.name}</strong>
             <span>Board-Certified Internal Medicine</span>
@@ -413,7 +441,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
           <p class="eyebrow">Meet Your Physician</p>
           <h2 id="doc-title">Personally Treated by {DOCTOR.name}</h2>
           <p>
-            Unlike on-demand apps that dispatch whoever is on shift, every Newport Beach patient is cared for personally by <strong>Dr. Sina Khaneki, MD, MPH</strong>.
+            Unlike on-demand apps that send whoever is on shift, every {name} house call is performed personally by <strong>Dr. Sina Khaneki, MD, MPH</strong>.
           </p>
           <p>
             Dr. Khaneki completed his Internal Medicine Residency at Hurley Medical Center / Michigan State University (serving as Ambulatory Clinic Chief Resident), earned his Master of Public Health at Indiana University, and is completing a Fellowship in Integrative and Functional Medicine at the <strong>University of California, Irvine (UCI)</strong>.
@@ -431,8 +459,8 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
       <!-- TRANSPARENT PRICING BOX -->
       <div class="price reveal" id="pricing">
         <span class="price__tag">Transparent Pricing</span>
-        <h3 class="price__name">One-Time Visit or Ongoing Concierge Care</h3>
-        <p class="price__sub">No surprise hospital bills or hidden fees. Choose what fits your needs:</p>
+        <h3 class="price__name">One-Time House Call or Concierge Membership</h3>
+        <p class="price__sub">No surprise urgent care bills or hidden fees. Choose what fits your needs:</p>
 
         <div class="price__amt">
           <div>
@@ -448,11 +476,11 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
           </div>
         </div>
 
-        <p class="price__inc">Every Newport Beach House Call Includes:</p>
+        <p class="price__inc">Every {name} House Call Includes:</p>
         <ul class="price__list">
           <li><Icon name="check" size={18} /> Unrushed in-home examination by Dr. Khaneki (MD, MPH)</li>
-          <li><Icon name="check" size={18} /> Personalized treatment plan &amp; clinical care</li>
-          <li><Icon name="check" size={18} /> Same-day prescriptions sent to your local pharmacy</li>
+          <li><Icon name="check" size={18} /> Personalized diagnosis &amp; clinical treatment plan</li>
+          <li><Icon name="check" size={18} /> Same-day e-prescriptions sent to your local pharmacy</li>
           <li><Icon name="check" size={18} /> Direct physician follow-up after your visit</li>
         </ul>
 
@@ -472,15 +500,15 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     <div class="container">
       <div class="center reveal">
         <p class="eyebrow">Patient Reviews</p>
-        <h2 id="reviews-title">Why Coastal Orange County Families Trust Dr. Khaneki</h2>
-        <p class="lede">Real 5-star experiences from patients and families who needed attentive, in-home medical care.</p>
+        <h2 id="reviews-title">Why Orange County Families Trust Dr. Khaneki</h2>
+        <p class="lede">Real 5-star experiences from patients and families who wanted attentive medical care at home.</p>
       </div>
 
       {featuredStory && (
-        <blockquote class="nb-quote reveal">
+        <blockquote class="hc-quote reveal">
           <p>“{featuredStory.text}”</p>
           <footer>
-            <span class="nb-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={15} />)}</span>
+            <span class="hc-stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={15} />)}</span>
             <strong>— {featuredStory.name}, Verified Google Review</strong>
           </footer>
         </blockquote>
@@ -496,26 +524,26 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     </div>
   </section>
 
-  <!-- NEWPORT BEACH NEIGHBORHOODS & MAP -->
+  <!-- NEIGHBORHOODS & MAP -->
   <section class="section" aria-labelledby="areas-title">
     <div class="container local-grid">
       <div class="reveal">
-        <p class="eyebrow">Service Coverage</p>
-        <h2 id="areas-title">Serving Every Neighborhood in Newport Beach, CA</h2>
+        <p class="eyebrow">{name} Service Area</p>
+        <h2 id="areas-title">Serving Every Neighborhood in {name}, CA</h2>
         <p>
-          From bayfront homes on Balboa Island and Lido Isle to hillside estates in Newport Coast and Pelican Hill, we provide prompt, discreet house calls across all of Newport Beach (ZIP codes <strong>92657, 92658, 92659, 92660, 92661, 92662, and 92663</strong>).
+          {city.gatedOrAccessNote} We provide prompt, discreet house calls across all of {name} (ZIP {city.zipCodes.length > 1 ? 'codes' : 'code'} <strong>{city.zipCodes.join(', ')}</strong>).
         </p>
 
-        <ul class="nb-hoods" aria-label="Newport Beach neighborhoods served">
-          {neighborhoods.map((n) => (
+        <ul class="hc-hoods" aria-label={`${name} neighborhoods served`}>
+          {city.neighborhoods.map((n) => (
             <li><Icon name="pin" size={14} /> {n}</li>
           ))}
         </ul>
 
-        <div class="nb-office">
-          <Image src={consult} alt="In-home doctor consultation in Newport Beach" width={120} height={90} class="nb-office__thumb" />
+        <div class="hc-office">
+          <Image src={consult} alt={`In-home doctor consultation in ${name}, CA`} width={120} height={90} class="hc-office__thumb" />
           <div>
-            <strong>Need to be seen today in Newport Beach?</strong>
+            <strong>Need a house call in {name} today?</strong>
             <p>Call <a href={SITE.phoneHref}>{SITE.phone}</a> to confirm our next available arrival window.</p>
           </div>
         </div>
@@ -523,7 +551,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
 
       <iframe
         class="local-map reveal"
-        title="Map of Newport Beach, California House Call Service Area"
+        title={`Map of ${name}, California House Call Service Area`}
         src={mapSrc}
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
@@ -531,30 +559,50 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- OPTIONAL EXTRA CONTENT (e.g. Aliso Viejo full service directory) -->
+  <slot />
+
+  <!-- CITY FAQs -->
   <section class="section section--sand" aria-labelledby="faq-title">
     <div class="narrow">
       <div class="center reveal">
-        <p class="eyebrow">Newport Beach House Call FAQs</p>
+        <p class="eyebrow">{name} House Call FAQs</p>
         <h2 id="faq-title">Common Questions Before Booking</h2>
       </div>
       <div class="reveal" style="margin-top:2rem">
-        <FAQList faqs={nbFaqs} />
+        <FAQList faqs={cityFaqs} />
       </div>
       <div class="center reveal" style="margin-top:2.25rem">
-        <p style="margin-bottom:.85rem; font-weight:600; color:var(--ink)">Still have a question? Speak directly with our team:</p>
+        <p style="margin-bottom:.85rem; font-weight:600; color:var(--ink)">Have a question about a house call in {name}? Speak directly with our team:</p>
         <a href={SITE.phoneHref} class="btn btn--gold btn--lg"><Icon name="phone" /> Call {SITE.phone}</a>
       </div>
+    </div>
+  </section>
+
+  <!-- NEARBY ORANGE COUNTY CITIES SERVED -->
+  <section class="section section--ink nearby" aria-labelledby="nearby-title">
+    <div class="container center">
+      <p class="eyebrow" style="color:var(--gold-2)">Orange County Coverage</p>
+      <h2 id="nearby-title">Also Providing House Calls Across Neighboring Cities</h2>
+      <p class="lede" style="color:#b9c4d1">
+        Caring for a family member in a nearby community? Explore our dedicated in-home medical care pages across Orange County:
+      </p>
+      <ul class="nearby__list">
+        {otherCities.map((c) => (
+          <li><a href={c.path}>{c.name}</a></li>
+        ))}
+      </ul>
     </div>
   </section>
 </BaseLayout>
 
 <script>
-  const nbForm = document.getElementById('nb-lead-form') as HTMLFormElement | null;
-  nbForm?.addEventListener('submit', (e) => {
-    if (nbForm.dataset.hasEndpoint !== 'true') {
+  const cityForm = document.getElementById('city-lead-form') as HTMLFormElement | null;
+  cityForm?.addEventListener('submit', (e) => {
+    if (cityForm.dataset.hasEndpoint !== 'true') {
       e.preventDefault();
-      if (confirm('Online requests are being set up. Would you like to call us now at (949) 741-0512 for immediate Newport Beach house call scheduling?')) {
+      const cityName = cityForm.dataset.city || 'Orange County';
+      if (confirm(`Online requests are being set up. Would you like to call us now at (949) 741-0512 for immediate ${cityName} house call scheduling?`)) {
         window.location.href = 'tel:+19497410512';
       }
     }
@@ -563,7 +611,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
 
 <style>
   /* Hero */
-  .nb-hero {
+  .hc-hero {
     position: relative;
     background: var(--ink);
     color: #d5dfe9;
@@ -571,7 +619,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     overflow: hidden;
     isolation: isolate;
   }
-  .nb-hero__bg {
+  .hc-hero__bg {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -581,7 +629,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     z-index: -2;
     opacity: 0.32;
   }
-  .nb-hero__overlay {
+  .hc-hero__overlay {
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -589,18 +637,18 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
       radial-gradient(900px 420px at 85% 15%, rgba(214, 184, 120, 0.18), transparent 65%),
       linear-gradient(105deg, rgba(14, 27, 42, 0.94) 0%, rgba(14, 27, 42, 0.85) 50%, rgba(14, 27, 42, 0.96) 100%);
   }
-  .nb-hero__grid {
+  .hc-hero__grid {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
     gap: clamp(2rem, 4.5vw, 4rem);
     align-items: center;
   }
   @media (max-width: 980px) {
-    .nb-hero__grid {
+    .hc-hero__grid {
       grid-template-columns: 1fr;
     }
   }
-  .nb-pill {
+  .hc-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
@@ -609,40 +657,38 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     background: rgba(214, 184, 120, 0.14);
     border: 1px solid rgba(214, 184, 120, 0.4);
     color: var(--gold-2);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     margin-bottom: 1.15rem;
   }
-  .nb-pill__dot {
+  .hc-pill__dot {
     width: 8px;
     height: 8px;
+    flex: none;
     border-radius: 50%;
     background: #4cd97b;
     box-shadow: 0 0 0 4px rgba(76, 217, 123, 0.2);
   }
-  .nb-hero h1 {
+  .hc-hero h1 {
     color: #fff;
     font-size: clamp(2.4rem, 4.8vw, 4rem);
     margin-bottom: 1rem;
   }
-  .nb-hero__lede {
+  .hc-hero__lede {
     font-size: 1.12rem;
     line-height: 1.65;
     color: #d6e0eb;
     max-width: 56ch;
   }
-  .nb-hero__lede strong {
-    color: #fff;
-  }
-  .nb-hero__ctas {
+  .hc-hero__ctas {
     display: flex;
     flex-wrap: wrap;
     gap: 0.8rem;
     margin: 1.6rem 0 1.4rem;
   }
-  .nb-hero__trust {
+  .hc-hero__trust {
     list-style: none;
     padding: 0;
     margin: 0 0 1.5rem;
@@ -651,16 +697,16 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     font-size: 0.94rem;
     color: #e4ebf3;
   }
-  .nb-hero__trust li {
+  .hc-hero__trust li {
     display: flex;
     align-items: center;
     gap: 0.55rem;
   }
-  .nb-hero__trust :global(svg) {
+  .hc-hero__trust :global(svg) {
     color: var(--gold-2);
     flex: none;
   }
-  .nb-hero__proof {
+  .hc-hero__proof {
     display: inline-flex;
     align-items: center;
     gap: 0.65rem;
@@ -669,14 +715,14 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     font-size: 0.9rem;
     color: #cbd6e2;
   }
-  .nb-stars {
+  .hc-stars {
     display: inline-flex;
     gap: 2px;
     color: var(--gold-2);
   }
 
   /* Lead Card */
-  .nb-card {
+  .hc-card {
     background: var(--ivory);
     color: var(--text);
     border-radius: var(--radius-lg);
@@ -684,13 +730,13 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     border: 1px solid rgba(214, 184, 120, 0.45);
     overflow: hidden;
   }
-  .nb-card__head {
+  .hc-card__head {
     background: linear-gradient(160deg, var(--ink-2), var(--ink-3));
     color: #d4dee9;
     padding: 1.5rem 1.75rem 1.25rem;
     border-bottom: 1px solid rgba(214, 184, 120, 0.25);
   }
-  .nb-card__badge {
+  .hc-card__badge {
     display: inline-block;
     font-size: 0.68rem;
     font-weight: 800;
@@ -702,37 +748,37 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     color: var(--ink);
     margin-bottom: 0.5rem;
   }
-  .nb-card__head h2 {
+  .hc-card__head h2 {
     color: #fff;
     font-size: 1.65rem;
     margin: 0 0 0.35rem;
   }
-  .nb-card__head p {
+  .hc-card__head p {
     margin: 0;
     font-size: 0.88rem;
   }
-  .nb-card__head a {
+  .hc-card__head a {
     color: var(--gold-2);
   }
-  .nb-card__form {
+  .hc-card__form {
     padding: 1.4rem 1.75rem 1.6rem;
   }
-  .nb-card__row {
+  .hc-card__row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
   }
   @media (max-width: 540px) {
-    .nb-card__row {
+    .hc-card__row {
       grid-template-columns: 1fr;
       gap: 0;
     }
-    .nb-card__head,
-    .nb-card__form {
+    .hc-card__head,
+    .hc-card__form {
       padding-inline: 1.25rem;
     }
   }
-  .nb-card__note {
+  .hc-card__note {
     font-size: 0.76rem;
     color: var(--muted);
     text-align: center;
@@ -788,7 +834,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     color: var(--muted);
   }
 
-  /* Care Categories */
+  /* Care Categories & Toolkit */
   .care-grid {
     margin-top: 2.75rem;
   }
@@ -839,6 +885,59 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     text-decoration: none;
     padding-top: 1rem;
     border-top: 1px solid var(--line);
+  }
+
+  .toolkit {
+    margin-top: 2rem;
+    padding: 2rem 2.25rem;
+    border-radius: var(--radius-lg);
+    background: var(--sand);
+    border: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  @media (max-width: 900px) {
+    .toolkit {
+      grid-template-columns: 1fr;
+      padding: 1.5rem;
+    }
+  }
+  .toolkit h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .toolkit__sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+  .toolkit__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem 1.2rem;
+  }
+  @media (max-width: 600px) {
+    .toolkit__list {
+      grid-template-columns: 1fr;
+    }
+  }
+  .toolkit__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .toolkit__list :global(svg) {
+    color: var(--gold);
+    flex: none;
+    margin-top: 0.2rem;
   }
 
   /* Urgent Care Comparison */
@@ -1140,7 +1239,7 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
   }
 
   /* Featured quote */
-  .nb-quote {
+  .hc-quote {
     margin: 2rem auto 0;
     max-width: 900px;
     background: var(--ink);
@@ -1150,14 +1249,14 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     border-left: 4px solid var(--gold);
     box-shadow: var(--shadow);
   }
-  .nb-quote p {
+  .hc-quote p {
     font-family: var(--font-display);
     font-size: clamp(1.2rem, 2vw, 1.5rem);
     font-style: italic;
     line-height: 1.5;
     margin: 0 0 1rem;
   }
-  .nb-quote footer {
+  .hc-quote footer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -1178,15 +1277,15 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
       grid-template-columns: 1fr;
     }
   }
-  .nb-hoods {
+  .hc-hoods {
     list-style: none;
     padding: 0;
     margin: 1.5rem 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
     gap: 0.55rem;
   }
-  .nb-hoods li {
+  .hc-hoods li {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -1194,15 +1293,15 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 999px;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 600;
     color: var(--ink);
   }
-  .nb-hoods :global(svg) {
+  .hc-hoods :global(svg) {
     color: var(--gold);
     flex: none;
   }
-  .nb-office {
+  .hc-office {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -1212,24 +1311,24 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     border-radius: var(--radius);
     margin-top: 1.5rem;
   }
-  .nb-office__thumb {
+  .hc-office__thumb {
     width: 84px;
     height: 64px;
     object-fit: cover;
     border-radius: 10px;
     flex: none;
   }
-  .nb-office strong {
+  .hc-office strong {
     display: block;
     color: var(--ink);
     font-size: 1rem;
   }
-  .nb-office p {
+  .hc-office p {
     margin: 0.15rem 0 0;
     font-size: 0.92rem;
     color: var(--muted);
   }
-  .nb-office a {
+  .hc-office a {
     font-weight: 700;
   }
   .local-map {
@@ -1238,6 +1337,33 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent('Newport Beac
     border: 0;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
+  }
+
+  /* Nearby Cities */
+  .nearby__list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.55rem;
+    max-width: 960px;
+  }
+  .nearby__list a {
+    display: inline-block;
+    padding: 0.5rem 1.05rem;
+    border-radius: 999px;
+    border: 1px solid rgba(214, 184, 120, 0.35);
+    color: #e6ebf1;
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .nearby__list a:hover {
+    border-color: var(--gold-2);
+    color: var(--gold-2);
+    background: rgba(214, 184, 120, 0.1);
   }
 </style>
 

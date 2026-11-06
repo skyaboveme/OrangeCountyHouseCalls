@@ -1,0 +1,16 @@
+---
+import CityHouseCallLanding from '../../components/CityHouseCallLanding.astro';
+import { CITIES, type CityHouseCallData } from '../../data/cities';
+
+export function getStaticPaths() {
+  return CITIES.filter((c) => c.slug !== 'aliso-viejo-ca').map((city) => ({
+    params: { city: city.slug },
+    props: { city },
+  }));
+}
+
+const { city } = Astro.props as { city: CityHouseCallData };
+---
+
+<CityHouseCallLanding city={city} />
+

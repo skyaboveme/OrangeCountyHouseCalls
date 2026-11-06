@@ -16,8 +16,12 @@ interface Props {
   noindex?: boolean;
   published?: string | null;
   modified?: string | null;
+  cityContext?: { name: string; lat: number; lng: number };
 }
-const { title, description, image = '/images/og-default.jpg', type = 'website', schema = [], noindex = false, published, modified } = Astro.props;
+const { title, description, image = '/images/og-default.jpg', type = 'website', schema = [], noindex = false, published, modified, cityContext } = Astro.props;
+const placeName = cityContext?.name ?? 'Aliso Viejo';
+const geoLat = cityContext?.lat ?? SITE.geo.lat;
+const geoLng = cityContext?.lng ?? SITE.geo.lng;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
 const ogImage = new URL(image, SITE.url).href;
 const jsonLd = graph(...schema);
@@ -40,9 +44,9 @@ const jsonLd = graph(...schema);
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
     <meta name="theme-color" content="#0e1b2a" />
     <meta name="geo.region" content="US-CA" />
-    <meta name="geo.placename" content="Aliso Viejo" />
-    <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
-    <meta name="ICBM" content={`${SITE.geo.lat}, ${SITE.geo.lng}`} />
+    <meta name="geo.placename" content={placeName} />
+    <meta name="geo.position" content={`${geoLat};${geoLng}`} />
+    <meta name="ICBM" content={`${geoLat}, ${geoLng}`} />
 
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content={type} />
@@ -76,13 +80,13 @@ const jsonLd = graph(...schema);
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <a class="skip-link" href="#main">Skip to main content</a>
-    <Header />
+    <Header cityName={cityContext?.name} />
     <main id="main">
       <slot />
     </main>
     <Footer />
     <AppointmentModal />
-    <MobileCallBar />
+    <MobileCallBar isHouseCallLanding={Boolean(cityContext)} />
 
     <script>
       // Reveal-on-scroll

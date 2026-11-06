@@ -9,6 +9,7 @@ import doc from '../assets/dr-khaneki-2607.jpg';
 import illnesses from '../assets/home-general-illnesses-400x200.jpg';
 import injuries from '../assets/home-injuries.jpg';
 import { SITE, MEMBERSHIP } from '../data/site';
+import { CITIES } from '../data/cities';
 import { REVIEWS } from '../data/reviews';
 import { pages } from '../lib/content';
 import { medicalWebPage, breadcrumb } from '../lib/schema';
@@ -363,7 +364,7 @@ const audiences = ['Busy professionals', 'Seniors & their families', 'Patients w
       <p class="eyebrow">About</p>
       <h2 id="areas-title">Concierge care, 24/7, across South Orange County</h2>
       <p class="lede" style="color:#b9c4d1">{SITE.about}</p>
-      <ul class="areas__list">{SITE.areas.map((a) => <li>{a}</li>)}</ul>
+      <ul class="areas__list">{CITIES.map((c) => <li><a href={c.path}>{c.name}</a></li>)}</ul>
     </div>
   </section>
 </BaseLayout>
@@ -539,5 +540,6 @@ const audiences = ['Busy professionals', 'Seniors & their families', 'Patients w
 
   .areas .eyebrow { color: var(--gold-2); }
   .areas__list { list-style: none; padding: 0; margin: 2rem auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; max-width: 900px; }
-  .areas__list li { padding: .5rem 1rem; border-radius: 999px; border: 1px solid rgba(214,184,120,.35); color: #e6ebf1; font-size: .88rem; }
+  .areas__list a { display: inline-block; padding: .5rem 1rem; border-radius: 999px; border: 1px solid rgba(214,184,120,.35); color: #e6ebf1; font-size: .88rem; text-decoration: none; transition: border-color .2s, color .2s, background .2s; }
+  .areas__list a:hover { border-color: var(--gold-2); color: var(--gold-2); background: rgba(214,184,120,.1); }
 </style>
